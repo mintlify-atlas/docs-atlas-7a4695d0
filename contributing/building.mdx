@@ -1,0 +1,108 @@
+---
+title: "Building from source"
+description: "How to clone, configure, and build Onion Browser 3.X on your Mac using Xcode and CocoaPods."
+---
+
+## Prerequisites
+
+Before you build, make sure you have the following tools installed:
+
+- **Xcode** — Download from the Mac App Store or the [Apple Developer portal](https://developer.apple.com/xcode/). Xcode 15 or later is recommended.
+- **CocoaPods** — Onion Browser uses CocoaPods as its dependency manager. Install it with:
+
+```bash
+sudo gem install cocoapods
+```
+
+## Building the 3.X branch
+
+All active development happens on the `3.X` branch. Older versions (1.X and 2.X) are archived and not actively maintained.
+
+<Steps>
+  <Step title="Clone the repository">
+    ```bash
+    git clone git@github.com:OnionBrowser/OnionBrowser.git
+    cd OnionBrowser
+    git checkout 3.X
+    ```
+  </Step>
+  <Step title="Update the CocoaPods specs repo and install dependencies">
+    ```bash
+    pod repo update
+    pod install
+    ```
+
+    This fetches all declared pod dependencies. After completion, always use the generated `.xcworkspace` — not the `.xcodeproj` file directly.
+  </Step>
+  <Step title="Open the workspace in Xcode">
+    ```bash
+    open OnionBrowser.xcworkspace
+    ```
+  </Step>
+  <Step title="Configure Config.xcconfig">
+    Before you can run the app (especially in the simulator), you must set a bundle identifier for the `Debug` configuration. Open `Config.xcconfig` in the project root and fill in the empty `PRODUCT_BUNDLE_IDENTIFIER[config=Debug]` line:
+
+    ```
+    PRODUCT_BUNDLE_IDENTIFIER[config=Debug] = com.yourname.OnionBrowser.debug
+    DEVELOPMENT_TEAM[config=Debug] = YOUR_TEAM_ID
+    PROVISIONING_PROFILE_SPECIFIER[config=Debug] =
+    ```
+
+    <Warning>
+      Do not commit changes to `Config.xcconfig`. The file is intentionally kept out of source control to avoid accidentally checking in signing credentials. Run the following to tell git to skip it:
+
+      ```bash
+      git update-index --skip-worktree Config.xcconfig
+      ```
+
+      To re-enable tracking later:
+
+      ```bash
+      git update-index --no-skip-worktree Config.xcconfig
+      ```
+    </Warning>
+
+    Also make sure you haven't accidentally removed the references to `Config.xcconfig` in `project.pbxproj`.
+  </Step>
+  <Step title="Disable the Orbot dependency for simulator testing (optional)">
+    Onion Browser normally requires [Orbot](https://orbot.app/) to be installed and running. Since Orbot is not available in the simulator, you can bypass this requirement for local debugging.
+
+    According to `BUILD.md`, set the `OrbotManager-simulatorIgnoreOrbot` build setting to `true`. You can add this to `Config.xcconfig`:
+
+    ```
+    OrbotManager-simulatorIgnoreOrbot = true
+    ```
+
+    With this setting enabled, `OrbotManager` skips the Orbot status check, letting the browser UI load directly without a running Orbot instance.
+
+    <Note>
+      This flag only affects `DEBUG` builds. It has no effect on release builds. The `simulatorIgnoreOrbot` constant inside `OrbotManager.swift` controls this at the code level.
+    </Note>
+  </Step>
+  <Step title="Build and run">
+    Select your target device or simulator in Xcode's toolbar, then press **Cmd+R** to build and run.
+  </Step>
+</Steps>
+
+## Pod dependencies
+
+The `Podfile` declares all third-party dependencies. Here is what each one does:
+
+| Pod | Purpose |
+|---|---|
+| `Tor/GeoIP` | Embeds the Tor binary and GeoIP databases for built-in Tor support (iOS 17+). Tor is used when Orbot is unavailable or the user explicitly prefers built-in Tor. |
+| `IPtProxyUI` | Provides the pluggable transport (bridge) configuration UI, including Snowflake, Lyrebird/obfs4, meek, WebTunnel, and DNSTT setup. Shared code for proxy configuration lives here. |
+| `OrbotKit` | Inter-process communication with the Orbot iOS app. Used to check Orbot status, request permissions, listen for status changes, and query active Tor circuits. |
+| `Eureka` | Form-building framework for the settings UI. Powers the structured settings screens. |
+| `SwiftSoup` | HTML parsing library. Used for bookmark import/export with Firefox-compatible HTML bookmark files. |
+| `SDCAlertView` | Custom alert view framework that provides more flexible alert presentation than `UIAlertController`. |
+| `FavIcon` | Fetches and caches website favicons for the bookmarks UI. |
+| `MBProgressHUD` | Progress indicator HUD used during loading operations. |
+| `DTFoundation/DTASN1` | ASN.1 parser used for TLS certificate inspection and display. |
+| `TUSafariActivity` | Adds an "Open in Safari" action to the share sheet. |
+| `ImageRow` | A custom Eureka row type for image selection in settings forms. |
+| `OCMock` | Mock object framework used in the `OnionBrowser Tests` target only. |
+
+<Info>
+  The `Podfile` targets iOS 15.0 as the minimum deployment target, matching Orbot's minimum supported version. A `post_install` hook raises the deployment target to 12.0 for any pods that declare a lower minimum, to avoid Xcode 15 build warnings.
+</Info>

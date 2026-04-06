@@ -1,0 +1,102 @@
+---
+title: "First launch"
+description: "Walk through the Onion Browser startup flow, choose a connection mode, and start browsing privately."
+---
+
+When you open Onion Browser for the first time, the app guides you through a short setup sequence before you can browse. The steps you see depend on whether Orbot is already installed on your device.
+
+## Startup flow
+
+<Steps>
+  <Step title="Welcome screen">
+    The first screen displays the message "Welcome to Onion Browser — You're one step closer to private browsing." Tap **Next** to continue.
+
+    This screen appears only on a fresh install. On subsequent launches, the app goes directly to connecting.
+  </Step>
+  <Step title="Choose a connection mode">
+    Onion Browser checks whether Orbot is installed and presents the appropriate screen:
+
+    - **If Orbot is installed and running** — the app connects through Orbot automatically and opens the browser.
+    - **If Orbot is installed but not running** — you see a "Start Tor in Orbot" screen. Tap **Start Orbot** to switch to the Orbot app and start the Tor tunnel, then return to Onion Browser. Alternatively, tap **Start built-in Tor** to use the bundled Tor instead.
+    - **If Orbot is not installed** — you see an "Orbot or built-in Tor" choice screen. You can either tap **Use Orbot** to go to the App Store and install Orbot, or tap **Use built-in Tor** to proceed without Orbot.
+
+    <Warning>
+      Built-in Tor has known security problems compared to Orbot. The app surfaces this warning during setup. Install and use Orbot for the best protection.
+    </Warning>
+  </Step>
+  <Step title="Grant Orbot access (Orbot path only)">
+    If you install Orbot and return to Onion Browser, the app shows a permission screen: "Orbot installed! One more step." Tap **Request Access** to open a system prompt that lets Onion Browser communicate with Orbot's API.
+
+    This permission allows Onion Browser to:
+    - Use Orbot to connect to the official Tor network.
+    - Receive updates on the status of the connection.
+
+    If you deny access or dismiss the prompt, Onion Browser shows an "Access to Orbot was Denied" screen. Tap **Request Access** again to retry.
+
+    <Note>
+      If Orbot is running in onion-only mode, Onion Browser will warn you that this configuration is not supported and ask you to disable it in Orbot's settings before continuing.
+    </Note>
+  </Step>
+  <Step title="Browser opens">
+    Once connected, the browser opens and displays the start page. You are now browsing through Tor.
+  </Step>
+</Steps>
+
+## Connection modes explained
+
+### Via Orbot (recommended)
+
+When Onion Browser uses Orbot, it communicates with Orbot through an API and receives real-time status updates about the Tor connection. Orbot runs Tor as a system-level VPN and handles all the routing. This mode is recommended because:
+
+- Orbot is maintained independently and receives its own updates.
+- It provides a more complete and tested Tor implementation.
+- It supports advanced features such as bridges and pluggable transports configured from within Orbot.
+
+### Built-in Tor
+
+When you select built-in Tor, Onion Browser starts its own bundled Tor process. This mode works without installing any additional apps but has security limitations. The bundled Tor version may lag behind the current Tor release, and it does not benefit from the independent maintenance that Orbot provides.
+
+Use built-in Tor only when Orbot is unavailable or cannot be installed.
+
+## The browser interface
+
+After connecting, you land on the start page. The main interface elements are:
+
+- **Address bar** — at the top of the screen. Tap it to type a URL or a search query. Search uses the search engine you have configured in Settings.
+- **Shield icon** — in the toolbar. Tap it to open the security level picker for the current site or to change the default security level.
+- **Tab controls** — manage open tabs from the tab bar. On iPad, Onion Browser supports multiple windows.
+
+## Setting a security level
+
+On first launch you may want to choose a security level before you start browsing. Tap the **shield icon** in the toolbar to open the security level picker.
+
+The three built-in presets are:
+
+| Level | JavaScript | Lockdown mode | Orientation & motion | Media capture |
+|-------|-----------|---------------|---------------------|---------------|
+| **Gold** | Disabled | Enabled | Blocked | Blocked |
+| **Silver** | Enabled | Enabled | Blocked | Blocked |
+| **Bronze** | Enabled | Disabled | Allowed | Allowed |
+
+<Note>
+  **Gold** offers the strongest protection but will break many sites that rely on JavaScript. **Silver** is a good default for most users — it enables lockdown mode and blocks sensor and camera access while keeping JavaScript on. **Bronze** is not recommended.
+</Note>
+
+Tap **Customize** in the security picker to open the full security settings where you can adjust individual options or apply a different preset per site.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Security levels" icon="lock" href="/browsing/security-levels">
+    Learn what each security preset controls and how to apply per-site overrides.
+  </Card>
+  <Card title="Orbot setup" icon="shield-halved" href="/tor/orbot-setup">
+    Configure bridges and advanced Orbot settings for restricted networks.
+  </Card>
+  <Card title="Browsing basics" icon="globe" href="/browsing/browsing-basics">
+    Navigate the web, manage tabs, and use downloads.
+  </Card>
+  <Card title="Built-in Tor" icon="circle-nodes" href="/tor/built-in-tor">
+    Understand the limitations of built-in Tor and when to use it.
+  </Card>
+</CardGroup>

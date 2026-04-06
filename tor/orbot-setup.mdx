@@ -1,0 +1,63 @@
+---
+title: "Setting up Orbot"
+description: "Install and configure Orbot to provide a Tor VPN tunnel for Onion Browser."
+---
+
+## What Orbot is
+
+[Orbot](https://orbot.app/) is a free, open-source app from the Guardian Project that runs a Tor client as a system-wide VPN on iOS. When Orbot is active, it tunnels network traffic from other apps — including Onion Browser — through Tor at the OS level.
+
+Onion Browser uses Orbot as its default Tor connection method because the iOS VPN layer is more reliable than running an in-process Tor client for most users.
+
+<Note>
+  If you are on iOS 17 or later and Orbot is not a good fit for your situation, you can use the built-in Tor engine instead. See [Built-in Tor](/tor/built-in-tor).
+</Note>
+
+## Installing Orbot
+
+<Steps>
+  <Step title="Download Orbot from the App Store">
+    Install [Orbot: Tor for iPhone & iPad](https://apps.apple.com/app/orbot/id1609461599) from the App Store. Orbot is free.
+  </Step>
+  <Step title="Open Orbot and complete setup">
+    Launch Orbot and follow its onboarding flow. Orbot will ask for VPN permission — grant it so it can tunnel traffic from other apps.
+  </Step>
+  <Step title="Start Tor in Orbot">
+    Tap the power button in Orbot to connect. Wait until Orbot shows a connected state before opening Onion Browser.
+  </Step>
+</Steps>
+
+## Starting Orbot before Onion Browser
+
+Orbot must be running and connected **before** you open Onion Browser. Onion Browser checks Orbot's status at launch and blocks browsing if Orbot is not active.
+
+If you open Onion Browser before starting Orbot, you will see a startup screen with the message **"Start Tor in Orbot. Then come back for private browsing."** Tap **Start Orbot** to switch to Orbot and start it, then return to Onion Browser.
+
+## What happens when Orbot stops
+
+Onion Browser monitors Orbot's status continuously while you browse. If Orbot stops or loses its connection:
+
+- All open tabs stop loading immediately.
+- The startup screen appears, asking you to restart Orbot.
+- No requests are allowed through until Orbot reconnects.
+
+This behavior prevents any traffic from leaking outside of Tor when Orbot goes down unexpectedly.
+
+## Orbot's onion-only mode
+
+Orbot has an optional **onion-only mode** that restricts traffic to `.onion` addresses only. Onion Browser does not support this mode — clearnet HTTPS traffic must also route through Tor. If Orbot is in onion-only mode, Onion Browser will display an error and prompt you to disable it in Orbot's settings.
+
+## Granting Onion Browser permission to talk to Orbot
+
+Onion Browser communicates with Orbot through an API to check its status and request circuit information. On first launch, Onion Browser will ask Orbot for an API token. You need to approve this in Orbot.
+
+If permission is denied or revoked, Onion Browser shows a permission screen. Follow the prompts to re-authorize access.
+
+## When Orbot may be unreliable
+
+In some situations, Orbot can become unstable or stop unexpectedly:
+
+- **Low memory.** iOS may terminate Orbot's VPN process in the background when memory is constrained, especially on older devices. When this happens, browsing stops until Orbot is restarted.
+- **Another active VPN.** iOS only allows one VPN connection at a time. If you have a corporate VPN, split-tunnel VPN, or another privacy app running, Orbot cannot start its VPN tunnel while the other VPN is active.
+
+In these situations, consider switching to **built-in Tor**, which runs inside the Onion Browser process and does not compete with other VPNs. See [Built-in Tor](/tor/built-in-tor) for details.

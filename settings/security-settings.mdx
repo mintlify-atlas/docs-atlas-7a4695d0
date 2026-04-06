@@ -1,0 +1,92 @@
+---
+title: "Security settings"
+description: "Configure tab security, HTTP blocking, the URL blocker, and other privacy controls in Onion Browser."
+---
+
+Onion Browser groups its core privacy controls under **Settings > Privacy & Security** and **Settings > Miscellaneous**. This page covers each option and what it does.
+
+## Tab security
+
+The **Tab Security** setting controls how long Onion Browser remembers your open tabs. Open **Settings**, scroll to **Privacy & Security**, and tap **Tab Security** to choose one of three levels.
+
+| Level | Behavior |
+|---|---|
+| **Remember Tabs** | Tabs and their URLs are saved across sessions. When you reopen the app, your tabs are restored exactly as you left them. |
+| **Forget at Shutdown** | All tab URLs are discarded when you close the app. Cached data is also cleared at that point. On next launch you start with a fresh session. |
+| **Forget in Background** | Tabs are cleared as soon as the app moves to the background — for example, when you switch to another app. This is the default. |
+
+<Note>
+  "Forget in Background" is the most protective option for users who share a device or frequently switch apps.
+</Note>
+
+### Cache clearing on shutdown
+
+When **Forget at Shutdown** is active, Onion Browser clears cached data when the app is terminated. This was fixed in version 3.2.0, where a bug previously left the cache intact in this mode.
+
+## Lockdown Mode (iOS 16+)
+
+Apple's [Lockdown Mode](https://support.apple.com/en-us/105120) is an extreme protection option for users at high risk of targeted attacks. It restricts many iOS features to reduce the device's attack surface.
+
+Onion Browser surfaces a per-site **Lockdown Mode** toggle inside **Default Security** (and inside each custom site's settings). When enabled, the underlying `WKWebView` runs with additional restrictions applied by iOS. The option is only shown on iOS 16 and later — on earlier versions the toggle is hidden entirely.
+
+Lockdown Mode is on by default for the **Gold** (Secure) and **Silver** (Medium) security presets and off for **Bronze** (Insecure).
+
+## Block insecure HTTP requests
+
+The **Block Insecure HTTP Requests** switch (found inside **Default Security** as well as each per-site configuration) prevents the browser from loading resources over unencrypted HTTP. When enabled, any request that would go over plain HTTP is blocked before it is made.
+
+This feature was added in version 3.2.0. It is on by default.
+
+<Warning>
+  Some older or poorly configured sites load images, fonts, or scripts from HTTP URLs. Enabling this setting may break those resources on those sites. You can turn it off for a specific site using [per-site settings](/settings/per-site-settings).
+</Warning>
+
+## Clearing all browsing data
+
+Onion Browser registers a system-level **Clear Data** shortcut that is accessible via a long-press on the app icon (iOS 13+ quick actions / home screen shortcuts). Selecting it clears all cookies, local storage, and cached data immediately without opening the full app.
+
+Within the app, you can clear local storage for individual sites or all sites at once through **Settings > Cookies and Local Storage**.
+
+## URL blocker
+
+The URL blocker prevents the browser from loading requests to third-party tracking, advertising, and malware domains. It is enabled by default and can be turned off in **Settings > URL Blocker**.
+
+### How it works
+
+When you load a page, every sub-resource request (images, scripts, iframes, etc.) is checked against a host blocklist. If the requesting domain — or a parent domain — is on the list, the request is dropped. The main page's domain is never blocked even if it appears in the list, so visiting a site directly is not affected.
+
+Individual host rules can be toggled from within the **URL Blocker** screen — swipe left on any rule and tap **Disable** to suppress it, or **Enable** to restore it. Disabled rules are shown in red with a "Disabled: User disabled" label.
+
+### The HaGeZi blocklist
+
+Onion Browser ships with [HaGeZi's Light DNS Blocklist](https://github.com/hagezi/dns-blocklists), which blocks ads, tracking, metrics, and some malware domains. The bundled list is the **Light** tier (approximately 67,000 domains).
+
+You can update to a larger list at any time. Tap **Update** in **Settings > URL Blocker**, then choose from five tiers:
+
+| List | Approximate size |
+|---|---|
+| HaGeZi Light | ~67,000 domains |
+| HaGeZi Normal | ~145,000 domains |
+| HaGeZi Pro | ~200,000 domains |
+| HaGeZi Pro++ | ~300,000 domains |
+| HaGeZi Ultimate | ~412,000 domains |
+
+The update is downloaded through Tor using the active session. After downloading, the new list replaces the cached list and takes effect immediately. The bundled list is used as a fallback if no downloaded list is present.
+
+<Note>
+  Changing the URL blocker enable/disable setting requires restarting the app to take full effect.
+</Note>
+
+### Viewing active rules
+
+The **URL Blocker** screen shows three sections:
+
+- **Blocklist info** (section header is the list name, e.g. "HaGeZi's Light DNS Blocklist") — two rows show the list description and last-modified date. Tapping this section opens the HaGeZi blocklist repository on GitHub.
+- **Rules in use on current page** — which host rules are actively suppressing requests for the page you currently have open.
+- **All rules** — the full blocklist, searchable by domain name. Swipe left on any rule to disable or re-enable it.
+
+## Background hiding
+
+When **Hide App Content when in Background** is enabled, Onion Browser replaces its screenshot in the iOS app switcher with a blank overlay. This prevents the content of web pages from being visible when you multitask or hand your device to someone else.
+
+This setting defaults to **on**. It can be toggled in **Settings > Privacy & Security**.

@@ -1,122 +1,93 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Onion Browser",
+  "theme": "almond",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#a92bcb",
+    "light": "#71138d"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "https://media.brand.dev/e9c56feb-f4cd-410b-8dcd-9954d505c741.svg",
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/OnionBrowser/OnionBrowser"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/OnionBrowser/OnionBrowser"
+    }
+  },
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "User Guide",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Getting Started",
             "pages": [
-              "index",
-              "quickstart",
-              "development"
+              "introduction",
+              "installation",
+              "first-launch"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Browsing & Privacy",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "browsing/browsing-basics",
+              "browsing/security-levels",
+              "browsing/tabs-and-windows"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Tor & Network",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
+              "tor/how-tor-works",
+              "tor/orbot-setup",
+              "tor/built-in-tor",
+              "tor/bridges-and-circumvention"
             ]
           },
           {
-            "group": "AI tools",
+            "group": "Features",
             "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "features/bookmarks",
+              "features/search-engines",
+              "features/downloads",
+              "features/siri-shortcuts"
+            ]
+          },
+          {
+            "group": "Settings & Security",
+            "pages": [
+              "settings/security-settings",
+              "settings/content-policy",
+              "settings/per-site-settings",
+              "settings/app-lock"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "Contributing",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Development",
             "pages": [
-              "api-reference/introduction"
+              "contributing/building",
+              "contributing/architecture",
+              "contributing/localization"
             ]
           },
           {
-            "group": "Endpoint examples",
+            "group": "Project",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "contributing/security-policy",
+              "contributing/changelog"
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+    ]
   }
 }

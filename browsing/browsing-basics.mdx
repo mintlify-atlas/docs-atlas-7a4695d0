@@ -1,0 +1,95 @@
+---
+title: "Browsing basics"
+description: "How to navigate the web in Onion Browser: entering URLs, searching, viewing certificates, inspecting Tor circuits, and understanding privacy protections."
+---
+
+## Address and search bar
+
+The address bar at the top of the screen serves as both a URL field and a search input. Tap it to begin editing.
+
+- If you type a valid URL (with or without a scheme), Onion Browser loads it directly. If you omit the scheme, `https://` is prepended automatically. For `.onion` addresses, `http://` is used instead, since Tor already provides end-to-end encryption for onion services.
+- If the text contains spaces or no dots, Onion Browser treats it as a search query and submits it to your configured search engine.
+
+While you are editing, the URL displayed is the full address of the current page. When the field loses focus, it shows the host name only (without a `www.` prefix) for readability.
+
+### Live search suggestions
+
+When the live search setting is enabled and your search engine provides an autocomplete endpoint, suggestions appear in a dropdown below the address bar as you type. Tap any suggestion to run that search immediately. Tap the **×** button in the suggestions header to dismiss the list without navigating.
+
+Live search requests are routed through Tor, so your queries are not exposed to your ISP.
+
+## Navigation controls
+
+| Control | Action |
+|---------|--------|
+| Back button | Go back in the current tab's history. If the tab was opened by a link in another tab, going back closes the current tab and returns to the parent. |
+| Forward button | Go forward in the current tab's history. |
+| Reload / Stop button | While a page is loading this shows a stop (×) icon; tap to cancel the load. When the page is idle it shows a reload (↻) icon; tap to reload. |
+
+The toolbar hides when you scroll down and reappears when you scroll up or tap the status bar area to return to the top.
+
+## Encryption indicator
+
+A lock icon appears in the left side of the address bar when the current page has a valid TLS certificate:
+
+- **Closed green lock** — the connection is secure (standard DV or OV certificate, or Extended Validation).
+- **Open grey lock** — the connection is mixed: the main resource is secure but some sub-resources are not.
+- **No icon** — the connection is insecure (plain HTTP).
+
+### Viewing certificate information
+
+Tap the lock icon to open the **Certificate Information** sheet. It shows the full details parsed from the site's X.509 certificate:
+
+- **Certificate Information** — X.509 version, serial number, and signature algorithm. If SHA-1 is detected, the algorithm is highlighted as an error.
+- **Issued To** — subject fields including Common Name (CN), Organization (O), Organizational Unit (OU), and address fields.
+- **Period of Validity** — the `Not Before` and `Not After` dates.
+- **Issued By** — issuer entity fields.
+
+If the certificate carries Extended Validation, the verified organization name is shown with an "Ok" indicator.
+
+## Tor circuit viewer
+
+Tap the **Tor** button (the onion icon) in the toolbar to open the circuit viewer for the current site. The viewer lists the nodes in the active Tor circuit:
+
+1. **This browser** — your device, the origin of the request.
+2. **Guard node** — the entry relay (labeled "Guard"), showing country name and IP address.
+3. **Middle node** — the middle relay, showing country name and IP address.
+4. **Exit node** — the relay that makes the final connection to the destination server.
+5. **The destination** — the hostname you are visiting.
+
+For `.onion` addresses, the circuit shows the relays used for the hidden-service rendezvous rather than a clearnet exit node.
+
+Tap **New Circuit for this Site** to close the current circuits and reload the page through a fresh set of relays. Tap **Bridge Configuration** to change your pluggable-transport bridges.
+
+<Note>
+The circuit viewer is not available on internal pages such as the start page. Connect to a website to see your circuit.
+</Note>
+
+## URL blocker
+
+Onion Browser includes a built-in URL blocker that prevents requests matching known tracking and advertising patterns. When the blocker is active, matching sub-resource requests are silently cancelled before they leave your device.
+
+Blocked requests do not produce an error page; the page simply loads without the blocked resources. You can manage blocklist subscriptions in **Settings → URL Blocker**.
+
+## Onion-Location automatic redirect
+
+Some websites publish an `Onion-Location` HTTP header that advertises a `.onion` version of their site. When this header is present on an HTTPS response and the **Follow Onion-Location Header Automatically** setting is enabled for that site, Onion Browser cancels the current response and reloads the page at the `.onion` address.
+
+The redirect only fires when:
+- The current URL is **not** already a `.onion` address.
+- The current URL uses **HTTPS** (not plain HTTP).
+- The `Onion-Location` value is a valid `http://` or `https://` URL whose host ends in `.onion`.
+
+You can enable or disable this per site in **Settings → Security** for that host.
+
+## Universal link protection
+
+iOS allows apps to register themselves as handlers for specific domains, which can cause taps on ordinary links to open external apps instead of loading in Onion Browser. The **Universal Link Protection** setting prevents this by intercepting each navigation and re-issuing the request with a flag that bypasses the universal link system.
+
+This protection is skipped for iframes, back/forward navigation, and form submissions, where it is unnecessary.
+
+## Block insecure HTTP requests
+
+When **Block Insecure HTTP Requests** is enabled for a host, any navigation to a plain `http://` URL on the clearnet is cancelled before the request leaves your device. Onion-service (`http://*.onion`) traffic is unaffected because onion services are inherently end-to-end encrypted by Tor.
+
+This setting defaults to **on** in the app-wide defaults and can be overridden per site. See [Security levels](/browsing/security-levels) for how it interacts with the preset system.

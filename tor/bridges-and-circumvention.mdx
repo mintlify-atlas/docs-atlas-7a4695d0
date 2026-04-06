@@ -1,0 +1,115 @@
+---
+title: "Bridges and circumvention"
+description: "Use bridges and pluggable transports to reach Tor in censored or restricted network environments."
+---
+
+## What bridges are
+
+Bridges are unlisted Tor relays. Because they are not published in the main Tor directory, censors cannot easily block them by IP address. Bridges are the primary tool for connecting to Tor when direct connections are blocked by a network, firewall, or government filter.
+
+Even when you are not in a censored region, bridges can help if your internet provider blocks known Tor IP ranges, or if you are on a restrictive corporate or school network.
+
+<Note>
+  Bridges help you reach the Tor network. They do not change how Tor protects your privacy once you are connected.
+</Note>
+
+## Supported transport types
+
+Onion Browser (with built-in Tor) supports the following pluggable transports and bridge types:
+
+<AccordionGroup>
+  <Accordion title="obfs4">
+    obfs4 makes Tor traffic look like random bytes, making it hard for deep packet inspection systems to identify it as Tor. It is the most widely available pluggable transport and the recommended starting point in most censored regions.
+
+    obfs4 bridges are retrieved via MOAT (see below) or entered manually.
+  </Accordion>
+  <Accordion title="Snowflake">
+    Snowflake disguises Tor traffic as WebRTC video calls, using a pool of volunteer proxies to relay traffic. It is harder to block than obfs4 because the proxies are ephemeral and numerous.
+
+    Onion Browser ships with Snowflake built in (version 2.12.1 as of 3.3.6). No bridge address is required — Snowflake connects to the volunteer proxy pool automatically.
+  </Accordion>
+  <Accordion title="WebTunnel">
+    WebTunnel disguises Tor traffic as HTTPS traffic to a legitimate-looking web server. It is designed to blend into normal web traffic and resist censorship by systems that allow HTTPS but block other protocols.
+
+    WebTunnel bridges can be entered as custom bridges in your bridge list.
+  </Accordion>
+  <Accordion title="DNSTT">
+    DNSTT tunnels Tor traffic through DNS queries. DNS is often available even in networks that block most other traffic, making DNSTT useful in highly censored regions where other transports fail.
+
+    DNSTT support was added experimentally in Onion Browser 3.3.3 and improved in 3.3.4 and 3.3.5 for challenged countries.
+  </Accordion>
+  <Accordion title="Vanilla bridges">
+    Vanilla bridges are standard Tor relays that are simply not listed in the public directory. They do not use any traffic obfuscation. They can help when Tor's IP addresses are blocked but deep packet inspection is not in use.
+
+    Support for vanilla bridges was added in Onion Browser 3.2.4.
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+  When using Orbot instead of built-in Tor, bridge configuration is handled inside the Orbot app. Tap **Bridge Configuration** in the circuit panel to open Orbot's bridge settings directly.
+</Note>
+
+## How to get bridges
+
+### Automatic retrieval via MOAT
+
+MOAT (Meek-based bridge retrieval) is the easiest way to get working obfs4 bridges. Onion Browser fetches bridge addresses from Tor Project servers using a meek-fronted request that does not require an existing Tor connection.
+
+To use MOAT:
+
+1. Open the bridge configuration screen (tap the shield icon → **Bridge Configuration**, or via **Configure Bridges** on the startup screen).
+2. Select **obfs4** as the transport type.
+3. Tap **Get Bridges** — Onion Browser contacts the MOAT service and retrieves fresh bridge addresses automatically.
+
+MOAT support was first added in Onion Browser 2.6.0 and has been updated since then.
+
+### Manual bridge entry
+
+If you have obtained bridge lines from another source (such as the [Tor Project's bridge database](https://bridges.torproject.org/)), you can enter them manually:
+
+1. Open the bridge configuration screen.
+2. Select **Custom** as the transport type.
+3. Enter one bridge line per entry in the text field.
+
+Each bridge line specifies the transport type and connection parameters, for example:
+
+```text
+obfs4 203.0.113.42:1234 FINGERPRINT cert=... iat-mode=0
+```
+
+### QR code import
+
+Bridge lines can also be imported by scanning a QR code. This is useful when bridge information is distributed in printed or visual form. From the bridge configuration screen, use the camera option to scan a QR code containing one or more bridge lines.
+
+QR code bridge import has been available since Onion Browser 2.3.0.
+
+## Mixed bridge support
+
+When using custom bridges, you can combine multiple transport types in the same bridge list. Onion Browser supports mixing obfs4, WebTunnel, and meek bridge lines in a single custom bridge configuration.
+
+This was added in Onion Browser 3.1.3 to allow flexibility when some transport types are blocked but others are not.
+
+## Choosing the right transport
+
+| Situation | Recommended transport |
+|---|---|
+| First attempt in a censored region | obfs4 (via MOAT) |
+| obfs4 is blocked | Snowflake |
+| All common transports blocked | DNSTT |
+| DNS also restricted | WebTunnel |
+| Simple IP blocking, no DPI | Vanilla bridges |
+
+## When bridges help and when they don't
+
+Bridges help when:
+
+- Tor's public relay IP addresses are blocked by your network or government.
+- Your network performs deep packet inspection and blocks recognizable Tor traffic.
+- You are in a country with active internet censorship.
+
+Bridges do not help when:
+
+- The entire internet is offline.
+- All DNS resolution is blocked and you cannot reach DNSTT's nameserver.
+- The site you are trying to reach is itself blocked at the content layer (as opposed to access to Tor being blocked).
+- You need stronger anonymity — bridges do not change the Tor circuit or add privacy beyond what Tor already provides.

@@ -1,0 +1,125 @@
+---
+title: "Per-site settings"
+description: "Apply custom security and content policies to individual websites in Onion Browser, overriding the global defaults."
+---
+
+Per-site settings let you configure every security and content option independently for a specific hostname. This is useful when the global default is strict (for example, JavaScript off) but a trusted site requires a relaxed setting.
+
+## Accessing per-site settings
+
+There are two ways to open the settings for a site:
+
+**From the address bar while browsing:**
+
+<Steps>
+  <Step title="Navigate to the site">
+    Load the page you want to configure in a tab.
+  </Step>
+  <Step title="Tap the shield icon">
+    Tap the shield icon in the toolbar. The shield shows the current security level for the page (Gold, Silver, Bronze, or Custom).
+  </Step>
+  <Step title="Adjust settings">
+    The security screen opens showing the site's hostname in the title bar. Changes apply only to that host.
+  </Step>
+</Steps>
+
+**From Settings:**
+
+<Steps>
+  <Step title="Open Settings">
+    Tap the gear icon or go to Settings from the tab menu.
+  </Step>
+  <Step title="Tap Custom Site Security">
+    Navigate to **Privacy & Security > Custom Site Security**. This lists all hosts that have custom rules.
+  </Step>
+  <Step title="Tap a host or add a new one">
+    Tap an existing host to edit its rules, or tap **Add Site** to create a rule for a new host. When adding a site, the field pre-fills with the current tab's hostname if one is available.
+  </Step>
+</Steps>
+
+## What can be customized per site
+
+Each site rule covers the same set of options available in Default Security:
+
+| Setting | Description |
+|---|---|
+| **Security preset** | Gold, Silver, Bronze, or Custom. Selecting a preset sets the four toggle values below automatically. |
+| **Allow JavaScript** | Enable or disable JavaScript for this host. |
+| **Lockdown Mode** | Apply iOS Lockdown Mode restrictions to this host's web view (iOS 16+). |
+| **Allow Access to Orientation and Motion Data** | Grant or deny access to `DeviceOrientationEvent` / `DeviceMotionEvent` APIs. |
+| **Allow Access to Microphone and Video** | Grant or deny media capture access. |
+| **Block Insecure HTTP Requests** | Block sub-resource requests over plain HTTP for this host. |
+| **Universal Link Protection** | Prevent links from opening in other apps while on this site. |
+| **Allow Persistent Cookies** | Allow this host to store cookies and local storage persistently. |
+| **Ignore TLS Errors** | Shown only when a TLS error has previously been accepted for this host. Turn off to stop ignoring errors. Once disabled, the toggle disappears. |
+| **Follow Onion-Location Header Automatically** | Automatically redirect to the site's `.onion` address if one is advertised. |
+| **User Agent** | Override the `User-Agent` string sent to this host. Leave blank to use the default. |
+
+## How settings inherit from the default
+
+If no explicit rule exists for a host, Onion Browser uses a domain-level walk-up to find the most specific applicable setting, then falls through to the global default.
+
+The resolution order for a request to `sub.example.com` is:
+
+1. `sub.example.com` — exact hostname match
+2. `example.com` — parent domain
+3. Default settings — the global fallback
+
+This means a rule set for `example.com` automatically applies to all subdomains unless a more specific rule overrides it. For example, if you whitelist cookies for `example.com`, that setting propagates to `sub.example.com` and `other.example.com` unless those subdomains have their own rules.
+
+<Note>
+  The walk-up only applies when no explicit rule exists for the more specific hostname. Once you save a custom rule for `sub.example.com`, it is used directly and the parent-domain rule is no longer consulted for that subdomain.
+</Note>
+
+## Example: allowing JavaScript on a trusted site
+
+By default, you may want JavaScript disabled globally (Gold preset). But a site like your bank requires JavaScript to function.
+
+<Steps>
+  <Step title="Navigate to the site">
+    Open the site in a tab.
+  </Step>
+  <Step title="Open per-site settings">
+    Tap the shield icon in the toolbar.
+  </Step>
+  <Step title="Enable JavaScript">
+    Toggle **Allow JavaScript** on. A confirmation dialog appears noting that you are creating a custom setting.
+  </Step>
+  <Step title="Confirm">
+    Tap **OK**. The site now loads with JavaScript enabled. Your global default remains unchanged.
+  </Step>
+</Steps>
+
+## Adding a custom site rule from Settings
+
+You can add rules for sites you haven't visited yet:
+
+<Steps>
+  <Step title="Open Custom Site Security">
+    Go to **Settings > Privacy & Security > Custom Site Security**.
+  </Step>
+  <Step title="Tap Add Site">
+    Scroll to the bottom and tap **Add Site**.
+  </Step>
+  <Step title="Enter the hostname">
+    Type the hostname (for example, `example.com`). The field uses URL keyboard input. Tap the **+** button to confirm.
+  </Step>
+  <Step title="Configure the site">
+    You are taken directly to the security settings screen for that host, where you can adjust all options.
+  </Step>
+</Steps>
+
+## Resetting per-site settings
+
+To remove a custom rule for a site and return it to using the global default:
+
+<Steps>
+  <Step title="Open Custom Site Security">
+    Go to **Settings > Privacy & Security > Custom Site Security**.
+  </Step>
+  <Step title="Delete the entry">
+    Swipe left on the host name and tap **Delete**. The custom rule is removed immediately, and the host reverts to inheriting from the global default (or a parent-domain rule if one exists).
+  </Step>
+</Steps>
+
+You can also tap **Edit** in the top-right corner to enter edit mode and delete multiple entries at once.

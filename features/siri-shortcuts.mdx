@@ -1,0 +1,154 @@
+---
+title: "Siri Shortcuts and App Intents"
+description: "Automate Onion Browser with Siri and the Shortcuts app using App Intents for tabs, bookmarks, search, and more."
+---
+
+Onion Browser supports Apple's App Intents framework, making its core browsing actions available to Siri and the Shortcuts app. You can use these intents to build automations, create voice commands, or chain Onion Browser actions with other apps.
+
+<Note>
+App Intents require iOS 18 or later. On earlier iOS versions, these actions are not available in the Shortcuts app.
+</Note>
+
+## Available intents
+
+### Create tab
+
+Opens a new tab in Onion Browser, optionally loading a URL.
+
+- **Parameter:** URL (optional)
+- If a URL is provided and the host's security settings require HTTPS, the URL is automatically upgraded from `http://` to `https://`.
+- Returns the new tab as a `TabEntity` for use in subsequent actions.
+
+---
+
+### Open URL in tab
+
+Loads a specific URL in an existing tab.
+
+- **Parameters:** tab (required), URL (required)
+- Switches to the specified tab and navigates to the URL.
+- Throws an error if the specified tab no longer exists.
+
+---
+
+### Search
+
+Performs a web search using the currently configured search engine, opening the results in a new tab.
+
+- **Parameter:** search term (required)
+- If the term can be parsed as a URL, it is opened directly. Otherwise, it is passed to the active search engine.
+
+---
+
+### Clear history
+
+Clears browsing history and website data.
+
+- **Parameter:** time frame (currently only `Forever` is supported)
+- Closes all open tabs and runs the website storage cleanup routine, which removes cookies, cache, and local storage.
+
+---
+
+### Close tabs
+
+Closes one or more open tabs.
+
+- **Parameter:** tabs (one or more `TabEntity` values)
+- Each specified tab is removed from the browser.
+
+---
+
+### Switch to tab
+
+Brings an existing tab into focus.
+
+- **Parameter:** tab (required, a `TabEntity`)
+- Switches the browser's active view to the specified tab.
+
+---
+
+### Bookmark current tab
+
+Saves the URL of an open tab as a bookmark.
+
+- **Parameters:** tab (required), name (optional)
+- If no name is provided, the tab's page title is used.
+- The bookmark is added to the root folder, its favicon is fetched, and the entry is uploaded to Nextcloud Bookmarks if sync is configured.
+- Returns the new bookmark as a `BookmarkEntity`.
+
+---
+
+### Bookmark URL
+
+Saves a specific URL as a bookmark without requiring an open tab.
+
+- **Parameters:** URL (required), name (optional)
+- If no name is provided, the URL's hostname is used as the title.
+- The bookmark is added to the root folder and uploaded to Nextcloud Bookmarks if sync is configured.
+- Returns the new bookmark as a `BookmarkEntity`.
+
+---
+
+### Open bookmark
+
+Opens a saved bookmark, either in a new tab or in an existing tab.
+
+- **Parameters:** bookmark (required, a `BookmarkEntity`), tab (optional)
+- If a tab is specified, the bookmark's URL is loaded into that tab. Otherwise, a new tab is created.
+
+---
+
+### Delete bookmarks
+
+Deletes one or more saved bookmarks.
+
+- **Parameter:** bookmarks (one or more `BookmarkEntity` values)
+- Removes the specified bookmarks from the local store and from Nextcloud Bookmarks if sync is configured.
+
+---
+
+### Find on page
+
+Activates the in-page search bar for a specific tab with a pre-filled search phrase.
+
+- **Parameters:** tab (required), search phrase (required)
+- Switches to the specified tab and opens the find-on-page UI with the provided text.
+
+---
+
+## Adding intents to Siri and Shortcuts
+
+<Steps>
+  <Step title="Open the Shortcuts app">
+    Launch the **Shortcuts** app on your iPhone or iPad.
+  </Step>
+  <Step title="Create a new shortcut">
+    Tap the **+** button to create a new shortcut.
+  </Step>
+  <Step title="Add an Onion Browser action">
+    Tap **Add Action**, search for **Onion Browser**, and select an intent from the list.
+  </Step>
+  <Step title="Configure the action">
+    Fill in any required parameters directly in the shortcut editor. You can chain multiple Onion Browser actions together or combine them with actions from other apps.
+  </Step>
+  <Step title="Add to Siri (optional)">
+    Tap the share icon and select **Add to Siri** to assign a voice phrase that triggers the shortcut.
+  </Step>
+</Steps>
+
+## Example shortcut ideas
+
+**Open DuckDuckGo in a new tab**
+Use **Create tab** with the URL set to `https://duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion/`. Assign the voice phrase "Open DuckDuckGo".
+
+**Morning privacy reset**
+Use a personal automation triggered at a set time (e.g. 07:00) to run **Clear history**. This clears all tabs and website data each morning without manual intervention.
+
+**Bookmark a URL from another app**
+Use a share sheet shortcut that receives a URL from the iOS share sheet and passes it to **Bookmark URL**. This lets you bookmark pages from Safari or any other browser directly into Onion Browser.
+
+**Quick search**
+Ask Siri "Search Onion Browser for [topic]" to trigger the **Search** intent. Onion Browser opens and runs the search through Tor using your configured search engine.
+
+**Close all tabs and clear history before handing over your device**
+Chain **Close tabs** (with all open tabs selected) followed by **Clear history** into a single shortcut, then assign it a Siri phrase for one-step privacy cleanup.

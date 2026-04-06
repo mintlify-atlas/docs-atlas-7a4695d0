@@ -1,0 +1,67 @@
+---
+title: "Downloads"
+description: "Download files through Tor directly from your browser, preview them with Quick Look, and share them with other apps via the iOS Files app."
+---
+
+Onion Browser can download files from the web and save them to your device. All downloads are routed through Tor, so the server you are downloading from sees only a Tor exit node address — not your real IP.
+
+## What can be downloaded
+
+Onion Browser handles downloads for any file type that the web server delivers as a download response, including:
+
+- Web pages saved as HTML
+- PDF documents
+- Images (JPEG, PNG, GIF, WebP, etc.)
+- Audio and video files
+- Binary files and archives (ZIP, etc.)
+
+Files that the browser can display natively (HTML pages being browsed, inline images) are not automatically offered as downloads. You initiate downloads explicitly through the share sheet or when the server sends a `Content-Disposition: attachment` header.
+
+## How downloads work
+
+Downloads in Onion Browser go through two paths depending on how they are initiated:
+
+**Browser-initiated downloads** (triggered by a `Content-Disposition: attachment` response or a link with a `download` attribute) are handled by WKWebView's built-in download delegate. The file is written directly to a temporary directory on device using the server-suggested filename.
+
+**Share sheet downloads** use a dedicated `DownloadActivity` that creates a `URLSession` configured through the Tor proxy. This session fetches the file with cookies from the active tab's web view, showing a progress indicator with a cancel button. The file is moved to the app's download directory when the download completes.
+
+In both cases, existing files with the same name in the destination directory are replaced.
+
+## Initiating a download
+
+<Steps>
+  <Step title="Navigate to the file">
+    Open the page or URL containing the file you want to download.
+  </Step>
+  <Step title="Open the share sheet">
+    Tap the share icon in the toolbar to open the iOS share sheet.
+  </Step>
+  <Step title="Tap Download">
+    Select **Download** from the share sheet. A circular progress indicator appears showing download progress. Tap **Cancel** to abort.
+  </Step>
+  <Step title="Preview or share the file">
+    When the download finishes, a Quick Look preview opens automatically inside the browser. From the preview, you can share the file with any app that supports the file type, or save it to the Files app.
+  </Step>
+</Steps>
+
+For server-initiated downloads (where the server sends the file as an attachment), the download starts automatically when the link is tapped. No share sheet interaction is needed. The Quick Look preview opens when the file has finished downloading.
+
+## Where downloads go
+
+Downloaded files are saved to the app's designated download directory within the app's sandboxed document storage. This directory is accessible through the iOS **Files** app under **On My iPhone/iPad → Onion Browser**.
+
+## Sharing downloaded files
+
+The Quick Look preview that appears after a download includes a share button. Tap it to open the iOS share sheet and send the file to another app — Mail, Notes, a document editor, or any other app that accepts the file type.
+
+You can also access previously downloaded files through the **Files** app and share them from there at any time.
+
+## Privacy note
+
+<Warning>
+All downloads in Onion Browser are routed through Tor. The server you download from cannot see your real IP address.
+
+However, be cautious when opening downloaded files in other apps. A file opened in a third-party app may trigger additional network requests (such as loading remote content in a PDF or office document) that go through that app's network stack, not through Tor. These requests could reveal your IP address to a third-party server.
+
+For sensitive files, review the content inside Onion Browser's Quick Look preview rather than opening them in an external app.
+</Warning>

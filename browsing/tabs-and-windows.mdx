@@ -1,0 +1,88 @@
+---
+title: "Tabs and windows"
+description: "Open and manage tabs in Onion Browser, understand tab security levels, use in-page search, and download files."
+---
+
+## Opening a new tab
+
+There are two ways to open a new tab:
+
+- **Toolbar button** — tap the **+** (new tab) button in the toolbar. A blank tab opens and the address bar gains focus so you can type immediately.
+- **Tab overview** — open the tab overview (see below), then tap **New Tab** at the bottom of the screen.
+
+Links that request a new window (via `target="_blank"` or `window.open`) open in a new tab automatically.
+
+## Tab overview
+
+Tap the **tabs button** in the toolbar — it shows the current number of open tabs — to enter the tab overview. All open tabs are displayed as a two-column grid of preview thumbnails. The active tab is highlighted with a distinct header color.
+
+From the overview you can:
+
+- **Switch tabs** — tap a thumbnail to bring that tab to the foreground.
+- **Close a tab** — tap the **×** button on the tab's header thumbnail, or use the close button on the cell.
+- **Reorder tabs** — long-press a thumbnail and drag it to a new position. The drag interaction is enabled on the collection view.
+- **Open a new tab** — tap **New Tab** at the bottom.
+- **Return to browsing** — tap **Done**.
+
+To return from the overview without switching tabs, tap **Done**.
+
+## Multiple windows on iPad
+
+On iPad, iOS multi-window support allows you to run more than one Onion Browser scene simultaneously (introduced in version 3.0.0). Each window has its own independent set of tabs, its own address bar, and its own browsing state. You can open a second window using the standard iPadOS Split View or Slide Over gestures, or via **File → New Window** from the app switcher.
+
+Each scene restores and persists its own tabs according to the active [tab security level](#tab-security-levels).
+
+## Tab security levels
+
+Onion Browser gives you three levels of control over how tab state is handled between sessions. This setting applies globally and is found in **Settings → Privacy**.
+
+<AccordionGroup>
+  <Accordion title="Remember Tabs">
+    Tabs and their URLs are saved when you leave the app and restored the next time you open it. State restoration uses the iOS `NSUserActivity` / scene restoration mechanism. This is the most convenient option.
+  </Accordion>
+
+  <Accordion title="Forget at Shutdown">
+    Tabs are restored if you switch away from Onion Browser briefly and return while the app is still in memory. When the app is fully terminated, all tabs and their browsing history are cleared, and website storage is cleaned up.
+  </Accordion>
+
+  <Accordion title="Forget in Background (default)">
+    This is the default. Tabs are cleared and website storage is cleaned up whenever Onion Browser moves to the background. Each time you return to the app you start with a fresh session.
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+Tab security level affects tab URL restoration only. It does not affect cookies or local storage, which are controlled by the **Allow Persistent Cookies** setting in per-site security settings.
+</Note>
+
+## History within a tab
+
+Each tab maintains a browsing history of up to 40 entries. You can navigate through this history with the **back** and **forward** buttons in the toolbar.
+
+Long-press the **back** button to see the full in-tab history list. Tap any entry to jump directly to that page.
+
+Back/forward navigation does not create new history entries (the `skipHistory` flag suppresses recording on those navigations). History is stored in memory only; it is not persisted to disk.
+
+## Search in page
+
+<Info>
+Find in page requires iOS 16 or later. The button is hidden on earlier versions.
+</Info>
+
+Tap the **find** button (magnifying glass) in the toolbar to open the native iOS find-in-page bar. You can type a query to jump through matches in the current page. Tap the button again — while the find navigator is visible — to dismiss it.
+
+The find feature uses `WKWebView`'s `WKFindInteraction` API and is not available on internal pages such as the start page.
+
+## Downloading files
+
+When a server sends a response with a content type that cannot be displayed inline (or signals `Content-Disposition: attachment`), Onion Browser automatically starts a download using `WKDownloadDelegate`.
+
+Once the download finishes, the file is displayed inside the tab using `QLPreviewController` (iOS Quick Look). The toolbar is shown after a download completes so you can access the action button.
+
+To save or share the downloaded file, tap the **share** (action) button in the toolbar while the file is previewed. From the iOS share sheet you can:
+
+- Save to Files
+- AirDrop to another device
+- Open in a compatible app
+- Add a bookmark for the file's source URL
+
+The temporary file is automatically deleted when you navigate away from the page or close the tab.

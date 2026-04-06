@@ -1,0 +1,82 @@
+---
+title: "Security levels"
+description: "Understand the Gold, Silver, and Bronze security presets in Onion Browser and what each one enables or disables."
+---
+
+Onion Browser lets you control how much functionality websites can use, trading convenience for privacy and attack-surface reduction. Security levels are configured through presets — Gold, Silver, and Bronze — each of which sets a fixed combination of underlying settings. You can also create a custom configuration by editing the individual toggles.
+
+The current security level for the active site is shown in the shield button on the left side of the toolbar. The shield displays a shortcode: **1** for Gold, **2** for Silver, **3** for Bronze, and **C** for a custom configuration.
+
+## Presets at a glance
+
+| Setting | Gold | Silver | Bronze |
+|---------|:----:|:------:|:------:|
+| JavaScript | Disabled | Enabled | Enabled |
+| Lockdown Mode | Enabled | Enabled | Disabled |
+| Orientation & Motion data | Disabled | Disabled | Enabled |
+| Microphone & Video access | Disabled | Disabled | Enabled |
+
+<AccordionGroup>
+  <Accordion title="Gold — maximum security">
+    **Shortcode: 1 (displayed in gold)**
+
+    Gold is the strictest preset. JavaScript is completely disabled, Lockdown Mode is active, and access to device sensors (orientation, motion) and media capture (microphone, camera) is blocked.
+
+    This configuration offers the greatest protection against browser-based fingerprinting and remote exploitation. The trade-off is that most modern websites rely heavily on JavaScript and will not render correctly or at all.
+
+    Onion Browser's default settings ship with JavaScript enabled (Silver level), so you must explicitly select Gold when you need the highest assurance.
+  </Accordion>
+
+  <Accordion title="Silver — balanced (default)">
+    **Shortcode: 2 (displayed in silver)**
+
+    Silver enables JavaScript and Lockdown Mode, but blocks access to orientation/motion sensor data and media capture. This is the default security level applied to all sites you have not customized.
+
+    Most websites function correctly under Silver. Lockdown Mode (iOS 16+) applies additional WebKit hardening at the OS level.
+  </Accordion>
+
+  <Accordion title="Bronze — maximum compatibility">
+    **Shortcode: 3 (displayed in bronze)**
+
+    Bronze enables JavaScript, disables Lockdown Mode, and allows access to orientation/motion data and media capture.
+
+    Bronze provides the most compatible browsing experience but exposes the most browser capabilities to websites, increasing the potential fingerprinting surface.
+  </Accordion>
+</AccordionGroup>
+
+<Warning>
+Selecting Gold disables JavaScript globally for the affected host. Many websites — including banking portals, web applications, and media sites — will break or show only partial content. If a site is inaccessible at Gold level, use a per-site override to allow JavaScript for that host while keeping the stricter default for everything else.
+</Warning>
+
+## What Lockdown Mode does
+
+Lockdown Mode is an iOS 16+ feature that applies aggressive WebKit mitigations: it disables certain JavaScript JIT compilation paths, blocks some web fonts and complex image types, and removes other features that have historically been exploited. It is distinct from Onion Browser's own content controls and operates at the operating system level.
+
+Both Gold and Silver enable Lockdown Mode by default. Bronze leaves it disabled for maximum compatibility.
+
+## Content policy and the "Very Strict" mode
+
+The underlying `WKWebView` content policy for JavaScript is controlled directly by the `WKWebpagePreferences.allowsContentJavaScript` flag, which Onion Browser sets per navigation based on the host's resolved settings (`HostSettings.javaScript`). There is no separate "Very Strict" content-policy toggle exposed in the UI; JavaScript on/off is the primary lever.
+
+## Per-site overrides
+
+Every setting — including the security preset — can be overridden on a per-host basis. Host settings walk up the domain hierarchy: a setting for `sub.example.com` falls back to `example.com`, which falls back to the app-wide default if no specific value is stored.
+
+To change settings for the site you are currently viewing, tap the **shield button** in the toolbar and adjust the preset or individual toggles. Changes take effect immediately and the page reloads automatically.
+
+To manage saved per-site settings for all hosts, go to **Settings → Per-Site Settings**. See [Per-site settings](/settings/per-site-settings) for full details.
+
+## Custom configurations
+
+If you adjust any individual toggle after selecting a preset, Onion Browser marks the configuration as **Custom** and shows a custom shield icon. You will be prompted to confirm the change. Custom configurations are stored per host and persist across sessions.
+
+## Other security-related settings
+
+The security settings screen also exposes these options, which are not part of the Gold/Silver/Bronze preset values but are stored per host:
+
+- **Block Insecure HTTP Requests** — cancels plain `http://` navigations on the clearnet. On by default.
+- **Universal Link Protection** — prevents iOS from handing links to external apps. On by default.
+- **Allow Persistent Cookies** — lets the host store cookies and local-storage data beyond the current session. Off by default.
+- **Follow Onion-Location Header Automatically** — redirects to the `.onion` version of a site when the server advertises one. Off by default.
+- **User Agent** — override the browser's user-agent string for this host.
+- **Ignore TLS Errors** — bypass certificate validation for this host. This option only appears if you have previously chosen to ignore errors for the host and can be turned off but not turned back on through the UI.

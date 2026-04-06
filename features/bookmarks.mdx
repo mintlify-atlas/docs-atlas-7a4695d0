@@ -1,0 +1,154 @@
+---
+title: "Bookmarks"
+description: "Save, organize, and sync your bookmarks across folders and devices. Import from Firefox or export as HTML, with optional Nextcloud Bookmarks sync."
+---
+
+Onion Browser stores bookmarks locally on your device and can optionally sync them to a Nextcloud Bookmarks server. Bookmarks are organized in a folder hierarchy and each entry stores a favicon fetched at save time.
+
+## Default bookmarks
+
+On first launch, Onion Browser pre-populates your bookmark list with a curated set of privacy-respecting and onion-service sites:
+
+| Name | URL |
+|---|---|
+| DuckDuckGo | `duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion` |
+| New York Times | `nytimesn7cgmftshazwhfgzm37qxb44r64ytbb2dj3x62d2lljsciiyd.onion` |
+| BBC | `bbcnewsd73hkzno2ini43t4gblxvycyac5aw4gnv7t2rccijh7745uqd.onion` |
+| ProPublica | `p53lf57qovyuvwsc6xnrppyply3vtqm7l6pcobkmyqsiofyeznfu5uqd.onion` |
+| Freedom of the Press Foundation | `fpfjxcrmw437h6z2xl3w4czl55kvkmxpapg37bbopsafdu7q454byxid.onion` |
+| Deutsche Welle | `dwnewsgngmhlplxy6o2twtfgjnrnjxbegbwqx6wnotdhkzt562tszfid.onion` |
+| Ahmia (search) | `juhanurmihxlp77nkq76byazcldy2hlmovfu2epvl5ankdibsot4csyd.onion` |
+| Facebook | `facebookwkhpilnemxj7asaniu7vnjjbiltxjqhye3mhbshg7kx5tfyd.onion` |
+| Onion Browser official site | `onionbrowser.com` |
+| The Tor Project | `2gzyxa5ihm7nsggfxnu52rck2vv4rvmdlkiu3zzui5du4xyclen53wid.onion` |
+
+These defaults are only added when no other bookmarks exist and are not restored if you delete them.
+
+The first six bookmarks appear as icon tiles on the start page. You can disable this by toggling **Hide bookmarks on start page** in Settings.
+
+## Adding a bookmark
+
+<Steps>
+  <Step title="Open the share sheet">
+    While viewing a page, tap the share icon in the toolbar to open the iOS share sheet.
+  </Step>
+  <Step title="Tap Add Bookmark">
+    Select **Add Bookmark** from the share sheet. Onion Browser pre-fills the title and URL from the current page.
+  </Step>
+  <Step title="Save">
+    Tap **Save**. The bookmark is added to the root folder. If the same URL is already bookmarked, the existing entry is opened for editing instead.
+  </Step>
+</Steps>
+
+You can also add bookmarks directly inside the Bookmarks screen by tapping the **+** button in the toolbar.
+
+## Favicons
+
+When you save a bookmark, Onion Browser automatically fetches the site's favicon through Tor and stores it alongside the bookmark. The favicon appears in the bookmark list and on the start page tiles. If no favicon is available, a generic bookmark icon is shown.
+
+Favicon acquisition happens asynchronously. If you leave the Add Bookmark screen before the fetch completes, the favicon is stored as soon as it arrives.
+
+## Organizing bookmarks into folders
+
+Bookmarks are shown in two sections: **Folders** at the top, and **Bookmarks** below. You can nest folders to any depth.
+
+**To create a folder:**
+
+Tap the folder icon in the Bookmarks toolbar. Enter a name and tap **Save**. The new folder appears in the folders section of the current level.
+
+**To navigate into a folder:**
+
+Tap it in the list. The view pushes into that folder, showing its sub-folders and bookmarks.
+
+**To reorder items:**
+
+Tap **Edit** in the toolbar, then drag bookmarks or folders using the reorder handle. Folders can only be reordered within the folders section; bookmarks can only be reordered within the bookmarks section.
+
+## Editing and deleting bookmarks
+
+**To edit a bookmark or folder:**
+
+Tap **Edit** in the toolbar, then tap the item. You can change the title and URL for bookmarks, or the name for folders.
+
+Changes are saved when you navigate back.
+
+**To delete a bookmark or folder:**
+
+Swipe left on the item and tap **Delete**, or tap **Edit** and use the red delete control.
+
+<Warning>
+Deleting a folder removes it and all its contents. This action also propagates to a connected Nextcloud Bookmarks server.
+</Warning>
+
+## Searching bookmarks
+
+A search bar is available at the top of the Bookmarks screen. Type to filter bookmarks by title or URL within the current folder. Reordering and editing are disabled while a search filter is active.
+
+## Importing bookmarks from Firefox
+
+Onion Browser can import bookmarks from any browser that exports in the Netscape bookmark HTML format — the same format Firefox uses.
+
+<Steps>
+  <Step title="Export from Firefox">
+    In Firefox, open **Bookmarks → Manage Bookmarks**, then choose **Import and Backup → Export Bookmarks to HTML**. Save the `.html` file somewhere accessible (iCloud Drive, Files app, etc.).
+  </Step>
+  <Step title="Open the import dialog">
+    In Onion Browser, open the Bookmarks screen, then tap the **download arrow** icon (import) in the top-right corner.
+  </Step>
+  <Step title="Pick the file">
+    The iOS document picker opens filtered to HTML files. Select your exported bookmarks file.
+  </Step>
+  <Step title="Sync (optional)">
+    If Nextcloud Bookmarks sync is configured, the imported bookmarks are also uploaded to the server.
+  </Step>
+</Steps>
+
+The importer reads folders (`<h1>`–`<h6>` elements) and bookmark links (`<a>` elements) recursively, preserving the folder hierarchy and embedded favicons stored as base64 PNG data URIs.
+
+## Exporting bookmarks as HTML
+
+<Steps>
+  <Step title="Open the export action">
+    In the Bookmarks screen, tap the **upload arrow** icon (export) in the top-right corner.
+  </Step>
+  <Step title="Share the file">
+    An iOS share sheet appears with the exported `.html` file. Save it to Files, AirDrop it to another device, or share it via any available app.
+  </Step>
+</Steps>
+
+The exported file uses the Netscape bookmark HTML format (`DOCTYPE NETSCAPE-Bookmark-file-1`), compatible with Firefox, Chrome, Safari, and most other browsers. Favicons are embedded as base64-encoded PNG data URIs inside each bookmark's `icon` attribute.
+
+## Nextcloud Bookmarks sync
+
+Onion Browser can sync bookmarks with a [Nextcloud](https://nextcloud.com/) server running the **Bookmarks** app. Sync is bidirectional: bookmarks on the server are pulled into the app, and bookmarks only in the app are pushed to the server.
+
+### Setting up sync
+
+<Steps>
+  <Step title="Open the sync settings">
+    In the Bookmarks screen, tap **Sync** in the toolbar. This button is only visible at the root folder level.
+  </Step>
+  <Step title="Enter your server details">
+    Fill in:
+    - **Host** — the hostname of your Nextcloud server (e.g. `nextcloud.example.com`)
+    - **Username** — your Nextcloud account username
+    - **Password** — your Nextcloud account password or an app-specific password
+  </Step>
+  <Step title="Tap Sync Bookmarks">
+    Tap the **Sync Bookmarks** button. A progress indicator appears while the sync runs.
+  </Step>
+</Steps>
+
+Your credentials are stored in the app's user defaults. The sync uses the Nextcloud Bookmarks REST API. All requests are routed through Tor.
+
+### How sync works
+
+When you tap **Sync Bookmarks**:
+
+1. Bookmarks and folders on the Nextcloud server are fetched and merged into the local bookmark store.
+2. Bookmarks that exist locally but not on the server are created on the server.
+3. Any changes made to individual bookmarks (title, URL) in Onion Browser are uploaded as you navigate back from the edit screen.
+
+<Note>
+Folders created via sync are preserved in the app with their server IDs. Deleting a folder or bookmark in the app also sends a delete request to the server.
+</Note>

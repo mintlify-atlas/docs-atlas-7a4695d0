@@ -1,0 +1,106 @@
+{
+  "projectType": "saas",
+  "projectName": "Onion Browser",
+  "projectDescription": "A free, open-source privacy-focused web browser for iPhone and iPad that encrypts and tunnels all web traffic through the Tor anonymity network.",
+  "theme": "almond",
+  "primaryColor": "#a92bcb",
+  "lightColor": "#71138d",
+  "darkColor": null,
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "User Guide",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "first-launch"
+            ]
+          },
+          {
+            "group": "Browsing & Privacy",
+            "pages": [
+              "browsing/browsing-basics",
+              "browsing/security-levels",
+              "browsing/tabs-and-windows"
+            ]
+          },
+          {
+            "group": "Tor & Network",
+            "pages": [
+              "tor/how-tor-works",
+              "tor/orbot-setup",
+              "tor/built-in-tor",
+              "tor/bridges-and-circumvention"
+            ]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "features/bookmarks",
+              "features/search-engines",
+              "features/downloads",
+              "features/siri-shortcuts"
+            ]
+          },
+          {
+            "group": "Settings & Security",
+            "pages": [
+              "settings/security-settings",
+              "settings/content-policy",
+              "settings/per-site-settings",
+              "settings/app-lock"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Contributing",
+        "groups": [
+          {
+            "group": "Development",
+            "pages": [
+              "contributing/building",
+              "contributing/architecture",
+              "contributing/localization"
+            ]
+          },
+          {
+            "group": "Project",
+            "pages": [
+              "contributing/security-policy",
+              "contributing/changelog"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "All traffic tunneled through the Tor anonymity network via Orbot or built-in Tor",
+    "WKWebView rendering engine with full media streaming support over Tor",
+    "Three security levels (Gold, Silver, Bronze) controlling JavaScript and content policies",
+    "Per-site security and content policy settings",
+    "Bridge and pluggable transport support (obfs4, Snowflake, DNSTT, WebTunnel)",
+    "Bookmarks with folder support, favicon display, and Firefox-compatible import/export",
+    "Siri Shortcuts and App Intents for browser automation",
+    "Tor circuit viewer and node information display",
+    "Lockdown Mode support (iOS 16+)",
+    "iPad multiple windows support",
+    "Biometric/passcode app lock",
+    "URL blocker with updatable blocklists",
+    "Nextcloud Bookmarks sync"
+  ],
+  "publicApiSurface": [
+    "TorManager.shared — Singleton managing the built-in Tor instance lifecycle",
+    "OrbotManager.shared — Singleton managing the Orbot IPC connection and status",
+    "Settings — Global user preferences (search engine, tab security, transport, etc.)",
+    "HostSettings.for(_:) — Per-host security and content policy settings",
+    "AppIntents: CreateTabIntent, OpenUrlInTabIntent, SearchIntent, ClearHistoryIntent, CloseTabsIntent, SwitchToTabIntent, BookmarkTabIntent, BookmarkUrlIntent, OpenBookmarkIntent, DeleteBookmarksIntent, FindOnPageIntent",
+    "TabSecurityLevel — Enum for tab data retention policy (alwaysRemember, forgetOnShutdown, clearOnBackground)",
+    "BrowsingViewController — Main browser chrome view controller",
+    "Tab — Core tab model managing WKWebView and navigation"
+  ]
+}

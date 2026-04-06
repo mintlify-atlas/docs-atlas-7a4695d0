@@ -1,0 +1,83 @@
+---
+title: "Search engines"
+description: "Choose from built-in privacy-focused search engines or add your own custom engine with autocomplete support."
+---
+
+Onion Browser routes all search queries through Tor. You can choose from several built-in engines, or add a custom engine using a URL template.
+
+## Built-in search engines
+
+Onion Browser ships with the following search engines defined in `SearchEngines.plist`:
+
+| Name | Notes |
+|---|---|
+| **DuckDuckGo** | Default. Full JavaScript interface via the DuckDuckGo `.onion` address. |
+| **DuckDuckGo HTML** | HTML-only version of DuckDuckGo. Lighter and works without JavaScript. Served from the same `.onion` address. |
+| **DuckDuckGo Lite** | Minimal HTML-only version. Lowest bandwidth. |
+| **Google** | Standard Google search over HTTPS. Autocomplete uses Firefox's Google suggest API. |
+| **Startpage** | Privacy-focused Google proxy. Submits queries via HTTP POST. |
+
+<Tip>
+DuckDuckGo is the recommended default. All three DuckDuckGo variants use the `.onion` address `duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion`, so your search queries never leave the Tor network to reach DuckDuckGo's servers.
+</Tip>
+
+## Switching the search engine
+
+<Steps>
+  <Step title="Open Settings">
+    Tap the gear icon to open the app settings.
+  </Step>
+  <Step title="Tap Search Engine">
+    Select **Search Engine** from the list.
+  </Step>
+  <Step title="Choose an engine">
+    Tap the engine you want to use. A checkmark indicates the active selection. Your choice is saved when you navigate back.
+  </Step>
+</Steps>
+
+## Adding a custom search engine
+
+You can add any search engine that accepts a query via a URL parameter.
+
+<Steps>
+  <Step title="Open Search Engine settings">
+    Go to **Settings → Search Engine**.
+  </Step>
+  <Step title="Tap Add">
+    Tap the **Add** button at the bottom of the engine list.
+  </Step>
+  <Step title="Fill in the details">
+    Enter:
+    - **Name** — a label for the engine (e.g. `Brave Search`)
+    - **Search URL** — the search URL with `%@` as the query placeholder (e.g. `https://search.brave.com/search?q=%@`)
+    - **Autocomplete URL** _(optional)_ — a URL returning search suggestions with `%@` as the query placeholder (e.g. `https://search.brave.com/api/suggest?q=%@`)
+  </Step>
+  <Step title="Tap Add">
+    The engine is saved and immediately selected as the active search engine.
+  </Step>
+</Steps>
+
+The `%@` placeholder is replaced with your search term at query time. The search URL must begin with `http://` or `https://` and must contain `%@`. The autocomplete URL follows the same rules and is optional.
+
+### Editing a custom engine
+
+Custom engines (not built-in engines) can be edited. Go to **Settings → Search Engine**, tap **Edit**, then tap the engine name. You can update the name, search URL, and autocomplete URL.
+
+Renaming a custom engine creates a new entry under the new name and removes the old one.
+
+### Deleting a custom engine
+
+Swipe left on a custom engine in the list and tap **Delete**. Built-in engines cannot be deleted. If you delete the currently active engine, the first available engine is selected automatically.
+
+## Live search (autocomplete)
+
+When **Live Search** is enabled in Settings, Onion Browser queries the active search engine's autocomplete URL as you type in the address bar and shows suggestions below the input field.
+
+Two settings control live search behavior:
+
+- **Live Search** — enables or disables autocomplete suggestions
+- **Stop on dot** — when enabled (default), autocomplete stops when you type a period (`.`), preventing queries for partial domain names from being sent to the search engine
+
+<Note>
+Autocomplete requests are sent through Tor. However, enabling live search means your partial keystrokes are sent as network requests before you finish typing. If you want to minimize the number of outbound requests, leave live search disabled.
+</Note>

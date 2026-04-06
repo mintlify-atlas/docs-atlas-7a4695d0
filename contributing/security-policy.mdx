@@ -1,0 +1,66 @@
+---
+title: "Security policy"
+description: "Supported versions, how to report a vulnerability, responsible disclosure expectations, and the scope of what Onion Browser can and cannot control on iOS."
+---
+
+## Supported versions
+
+Only the latest released version of Onion Browser receives security updates. This is a consequence of how the Apple App Store works: all users receive the same binary, and there is no mechanism to backport fixes to older releases.
+
+If you are using an older version, update to the latest version from the App Store before reporting a vulnerability.
+
+## Reporting a vulnerability
+
+Onion Browser was originally created by Mike Tigas and is now maintained by [Guardian Project](https://guardianproject.info).
+
+You can reach the maintainers through multiple contact channels:
+
+**https://guardianproject.info/contact/**
+
+<CardGroup cols={2}>
+  <Card title="GPG-encrypted email" icon="envelope">
+    Preferred for detailed vulnerability reports. Expect a reply within one business day.
+  </Card>
+  <Card title="Encrypted Matrix chat" icon="message-circle">
+    Available for near-real-time discussion. Contact details are on the Guardian Project contact page.
+  </Card>
+</CardGroup>
+
+<Warning>
+  Do not open a public GitHub issue for security vulnerabilities. Use the private channels above.
+</Warning>
+
+## Responsible disclosure
+
+The maintainers follow responsible disclosure practices and ask that reporters do the same:
+
+- Give the maintainers reasonable time to investigate and release a fix before publicly disclosing the issue.
+- Provide enough detail to reproduce the vulnerability.
+- Do not access or modify user data beyond what is necessary to demonstrate the issue.
+
+The maintainers will acknowledge receipt of your report and keep you informed of progress toward a fix.
+
+## Scope and iOS constraints
+
+Onion Browser is browser chrome around the **WebKit rendering engine**, combined with code that ensures all traffic is routed through Orbot's Tor Network Extension (or a built-in Tor instance on iOS 17+).
+
+This means a significant portion of the attack surface is **outside the maintainers' control**:
+
+| Area | Who controls it |
+|---|---|
+| WebKit rendering engine | Apple |
+| JavaScript engine (JavaScriptCore) | Apple |
+| TLS/certificate validation (below WebKit) | Apple / iOS Security Framework |
+| System VPN / Network Extension | Apple / Orbot |
+| Tor protocol implementation | The Tor Project |
+| Pluggable transports (Snowflake, Lyrebird, etc.) | Tor Project / third-party projects |
+
+Issues that are rooted in WebKit, the iOS sandbox, or the Tor protocol itself are best reported to the respective upstream projects as well. The maintainers will coordinate with upstream where appropriate.
+
+In-scope issues include — but are not limited to — traffic that bypasses Tor routing, information leakage through Onion Browser's own code, insecure storage of user data (bookmarks, settings, history), and weaknesses in the biometric/app lock implementation.
+
+## Credits
+
+If your report results in a confirmed security fix, you will receive full credit in the release changelog and any associated disclosure, unless you request to remain anonymous.
+
+The maintainers are grateful for any help in making Onion Browser more secure.

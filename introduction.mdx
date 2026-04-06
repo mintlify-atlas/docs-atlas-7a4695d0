@@ -1,0 +1,75 @@
+---
+title: "What is Onion Browser"
+description: "Onion Browser is a free, open-source web browser for iPhone and iPad that routes all traffic through the Tor anonymity network."
+---
+
+Onion Browser is a free web browser for iPhone and iPad that encrypts and tunnels all your internet traffic through the [Tor network](https://www.torproject.org/). Every request your browser makes — including audio and video streams — leaves your device only after passing through at least three Tor relays, masking your IP address and preventing network-level surveillance.
+
+The app is free and open source, released under the [Mozilla Public License 2.0](https://github.com/OnionBrowser/OnionBrowser/blob/3.X/LICENSE). Development is led by [Mike Tigas](https://mike.tig.as/) at Tigas Ventures, LLC, with contributions from the open-source community.
+
+## How Tor protects your privacy
+
+Tor (The Onion Router) works by encrypting your traffic in multiple layers and routing it through a series of volunteer-operated relays before it reaches its destination. Each relay peels away one layer of encryption and knows only the previous and next hop in the chain — no single relay can see both where traffic originated and where it is going.
+
+This design protects against:
+
+- **Network surveillance** — your ISP or mobile carrier sees only that you are connecting to the Tor network, not what sites you visit.
+- **Traffic analysis** — observers between you and a website cannot correlate your requests to your identity.
+- **IP-based tracking** — websites see the IP address of the Tor exit relay, not your real IP address.
+
+Onion Browser also supports `.onion` addresses — services that exist only inside the Tor network and do not route traffic over the public internet at all.
+
+## Connection modes
+
+Onion Browser can connect to Tor in two ways:
+
+**Via Orbot (recommended).** [Orbot](https://orbot.app/) is a companion app that runs Tor as a system-wide VPN on iOS. When Onion Browser uses Orbot, all traffic is tunneled through a full-featured, regularly updated Tor implementation maintained by the Guardian Project. This is the recommended mode because Orbot receives independent updates and provides a more robust Tor configuration.
+
+**Built-in Tor.** Onion Browser includes its own bundled Tor binary for cases where Orbot is not installed or not available. The app displays a warning when built-in Tor is selected because the built-in implementation has known security limitations compared to Orbot. Use built-in Tor only when Orbot is unavailable.
+
+## Key features
+
+**WKWebView rendering engine.** Onion Browser uses Apple's `WKWebView` — the same engine used by Safari — rather than the older `UIWebView`. This provides better performance, improved JavaScript compatibility, and access to modern web platform features.
+
+**Full media streaming over Tor.** All traffic, including audio and video streams, is tunnelled through Tor. Earlier versions of Onion Browser could not route media content through Tor; version 3.x eliminates that gap.
+
+**Security levels.** Onion Browser offers three built-in security presets that trade site compatibility against privacy protection:
+
+- **Gold** — maximum security. JavaScript is disabled, iOS lockdown mode is enabled, orientation/motion access and media capture are blocked. Some sites will not work correctly.
+- **Silver** — balanced. JavaScript is enabled, lockdown mode is enabled, orientation/motion access and media capture are blocked. Works well for most sites.
+- **Bronze** — maximum compatibility (not recommended). JavaScript is enabled, lockdown mode is disabled, orientation/motion and media capture are allowed. Offers the least protection.
+
+Each preset can be applied globally or overridden on a per-site basis. You can also define fully custom settings for individual sites.
+
+**Bridges and pluggable transports.** If your network blocks or throttles Tor, you can configure bridges — unlisted Tor relays that are harder to detect and block. Onion Browser passes bridge configuration through to Orbot, which supports pluggable transports such as obfs4 and Snowflake.
+
+**Downloads.** Web pages, documents, and other files can be downloaded directly to Files on your device.
+
+**Siri Shortcuts.** Onion Browser exposes App Intents that allow you to automate browsing actions using Siri Shortcuts or the iOS Shortcuts app.
+
+**Multiple windows on iPad.** On iPadOS, Onion Browser supports multiple windows, letting you run separate browsing sessions side-by-side.
+
+**Search in page.** From iOS 16 and later, you can search within the text of any open page.
+
+## Explore the documentation
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/installation">
+    Download from the App Store and install Orbot alongside Onion Browser.
+  </Card>
+  <Card title="First launch" icon="play" href="/first-launch">
+    Walk through the startup flow and connect to Tor for the first time.
+  </Card>
+  <Card title="Security levels" icon="lock" href="/browsing/security-levels">
+    Understand Gold, Silver, and Bronze presets and what each one controls.
+  </Card>
+  <Card title="Orbot setup" icon="shield-halved" href="/tor/orbot-setup">
+    Configure Orbot and grant Onion Browser access to the Tor connection.
+  </Card>
+  <Card title="Bridges and circumvention" icon="route" href="/tor/bridges-and-circumvention">
+    Set up bridges and pluggable transports to reach Tor from restricted networks.
+  </Card>
+  <Card title="Siri Shortcuts" icon="wand-magic-sparkles" href="/features/siri-shortcuts">
+    Automate browsing tasks with Siri and the iOS Shortcuts app.
+  </Card>
+</CardGroup>

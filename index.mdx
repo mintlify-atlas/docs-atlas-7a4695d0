@@ -1,97 +1,61 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Onion Browser"
+description: "A free, open-source privacy-enhancing web browser for iPhone and iPad that encrypts and tunnels all web traffic through the Tor anonymity network."
 ---
 
-## Setting up
+Onion Browser is a free web browser for iPhone and iPad that routes all your internet traffic through the [Tor network](https://www.torproject.org/), keeping your browsing private, anonymous, and secure. It works alongside [Orbot](https://orbot.app/) or uses a built-in Tor engine — giving you control over how you connect.
 
-Get your documentation site up and running in minutes.
-
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
-
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+<CardGroup cols={2}>
+  <Card title="Get started" icon="rocket" href="/installation">
+    Download Onion Browser from the App Store and set it up in minutes.
   </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
+  <Card title="How Tor works" icon="shield-halved" href="/tor/how-tor-works">
+    Learn how the Tor network protects your privacy and anonymity.
   </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
+  <Card title="Security levels" icon="lock" href="/browsing/security-levels">
+    Understand Gold, Silver, and Bronze security presets and what they control.
   </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
+  <Card title="Bridge setup" icon="route" href="/tor/bridges-and-circumvention">
+    Configure bridges and pluggable transports to bypass censorship.
   </Card>
-</Columns>
+</CardGroup>
 
-## Create beautiful pages
+## What Onion Browser does
 
-Everything you need to create world-class documentation.
+All web traffic — including audio and video streams — is routed through Tor before leaving your device. No other app on iOS offers this level of network-layer privacy for everyday browsing.
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
+<CardGroup cols={2}>
+  <Card title="Browsing basics" icon="globe" href="/browsing/browsing-basics">
+    Navigate the web, manage tabs, and use the address bar effectively.
   </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
+  <Card title="Bookmarks" icon="bookmark" href="/features/bookmarks">
+    Organize bookmarks in folders and sync with Nextcloud or Firefox.
   </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
+  <Card title="Per-site settings" icon="sliders" href="/settings/per-site-settings">
+    Apply custom security policies to individual websites.
   </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
+  <Card title="Siri Shortcuts" icon="wand-magic-sparkles" href="/features/siri-shortcuts">
+    Automate browsing actions with Siri and App Intents.
   </Card>
-</Columns>
+</CardGroup>
 
-## Need inspiration?
+## Quick setup
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+<Steps>
+  <Step title="Install Onion Browser">
+    Download Onion Browser from the [App Store](https://apps.apple.com/app/onion-browser/id519296448). It's free and open source.
+  </Step>
+  <Step title="Install and start Orbot">
+    Install [Orbot](https://apps.apple.com/app/orbot/id1609461599) from the App Store. Orbot provides the Tor VPN tunnel that Onion Browser uses by default.
+  </Step>
+  <Step title="Launch Onion Browser">
+    Open Onion Browser. It will detect Orbot and prompt you to start the Tor connection. Once connected, you'll see the start page and can begin browsing.
+  </Step>
+  <Step title="Choose your security level">
+    Tap the shield icon in the toolbar to select a security level — **Gold** for maximum privacy, **Silver** for balanced usability, or **Bronze** for compatibility with most sites.
+  </Step>
+</Steps>
+
+<Note>
+  Onion Browser requires iOS 15 or later. An iPhone or iPad running iOS 15+ is needed to use the app.
+</Note>

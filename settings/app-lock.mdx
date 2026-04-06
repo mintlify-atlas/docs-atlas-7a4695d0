@@ -1,0 +1,56 @@
+---
+title: "App lock"
+description: "Require Face ID, Touch ID, or a device passcode to open Onion Browser."
+---
+
+App lock requires authentication before Onion Browser can be used. Once enabled, the app prompts for biometrics or a device passcode every time it is opened from a locked or backgrounded state.
+
+## How to enable app lock
+
+<Steps>
+  <Step title="Open Settings">
+    Tap the gear icon or open Settings from the tab menu.
+  </Step>
+  <Step title="Find the lock option">
+    Scroll to **Privacy & Security**. The toggle is labeled based on the biometry available on your device:
+    - **Lock App with Face ID or Device Passcode**
+    - **Lock App with Touch ID or Device Passcode**
+    - **Lock App with Device Passcode** (when no biometry is enrolled)
+  </Step>
+  <Step title="Turn on the toggle">
+    Enable the switch. Onion Browser creates a private key in the Secure Enclave, which is used to verify your identity on subsequent launches. The key is device-only and cannot be exported.
+  </Step>
+</Steps>
+
+To disable app lock, turn the toggle off. The stored key is removed from the Secure Enclave.
+
+## What app lock protects
+
+App lock prevents someone who picks up your unlocked device from opening Onion Browser and viewing your browsing session, history, or any open tabs. Without passing authentication, the app does not display any content.
+
+The lock is enforced at launch. It does not encrypt stored data beyond what iOS already provides, but it ensures the app cannot be used without your biometric or passcode confirmation.
+
+## Biometry and passcode fallback
+
+Onion Browser uses the iOS Local Authentication framework. The exact prompt depends on your device and enrollment:
+
+- **Face ID** — on supported iPhone and iPad models.
+- **Touch ID** — on devices with a fingerprint sensor.
+- **Device passcode** — used as a fallback if biometry fails, is not enrolled, or is unavailable (for example, after several failed Face ID attempts).
+
+If the device has no passcode set at all, app lock cannot be created. On simulator builds the key creation will fail silently and the toggle will not stay on.
+
+<Note>
+  If biometry is temporarily unavailable (such as after restarting the device), iOS automatically prompts for the device passcode instead. You are never fully locked out as long as you know your passcode.
+</Note>
+
+## Interaction with "Forget in Background"
+
+App lock and the **Forget in Background** tab security level work independently but complement each other:
+
+- **Forget in Background** clears all open tabs as soon as the app moves to the background.
+- **App lock** requires authentication before the app can be used again after moving to the background or being closed.
+
+Using both together means that after switching away from Onion Browser, not only do you need to authenticate to reopen it, but all previously open tabs are also gone — no browsing session is recoverable by whoever gets past (or bypasses) the lock screen.
+
+If you use **Remember Tabs** or **Forget at Shutdown** instead, authenticated access still protects the session, but the tabs remain available once authentication passes.

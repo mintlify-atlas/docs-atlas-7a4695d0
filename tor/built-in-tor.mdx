@@ -1,0 +1,83 @@
+---
+title: "Built-in Tor"
+description: "Run Tor directly inside Onion Browser without Orbot, using iOS 17 proxy settings."
+---
+
+## What built-in Tor is
+
+Onion Browser can run its own Tor client inside the app process, without relying on Orbot. When built-in Tor is active, Onion Browser configures a local SOCKS5 proxy and applies it directly to `WKWebView` network sessions using iOS 17 proxy APIs.
+
+Built-in Tor was re-introduced in Onion Browser 3.1.0 to support scenarios where Orbot is not suitable.
+
+<Warning>
+  The built-in Tor has security limitations compared to Orbot. Orbot routes traffic at the OS VPN layer, which provides broader protection. Built-in Tor only covers traffic from within Onion Browser itself. Other apps on your device are not protected.
+</Warning>
+
+## When to use built-in Tor
+
+Use built-in Tor in the following situations:
+
+<AccordionGroup>
+  <Accordion title="iOS 17 or later required">
+    Built-in Tor relies on `WKWebView` proxy configuration APIs introduced in iOS 17. This feature is not available on iOS 15 or 16. On those versions, only Orbot is supported.
+  </Accordion>
+  <Accordion title="Running alongside another VPN">
+    iOS allows only one active VPN connection at a time. If you use a corporate VPN, a split-tunnel privacy tool, or any other VPN app, Orbot cannot start its tunnel while that VPN is active. Built-in Tor runs inside the app process and does not conflict with other VPNs.
+  </Accordion>
+  <Accordion title="Memory-constrained devices">
+    On older or low-memory iPhones and iPads, iOS may terminate Orbot's background VPN process. Built-in Tor runs in the same process as Onion Browser, so it is not subject to the same background memory pressure.
+  </Accordion>
+</AccordionGroup>
+
+## Switching between Orbot and built-in Tor
+
+The first time you launch Onion Browser on iOS 17 or later (if Orbot is not already running), you will see the **Orbot or built-in Tor** screen. Choose one:
+
+- **Use Orbot** — Onion Browser will require Orbot to be running before browsing.
+- **Use built-in Tor** — Onion Browser starts its own Tor engine.
+
+You can change this choice at any time:
+
+1. From the circuit or startup screen, tap **Start built-in Tor** or **Start Orbot**.
+2. Onion Browser saves your preference and applies it immediately.
+
+If Orbot is running and you are on iOS 17+, Onion Browser will opportunistically switch to Orbot even if you previously selected built-in Tor, as Orbot provides stronger protection.
+
+## Bootstrapping status
+
+When built-in Tor starts, it must bootstrap a connection to the Tor network before you can browse. During this process, Onion Browser displays:
+
+- A progress bar showing bootstrap percentage (0–100%).
+- A status label with the current bootstrap summary, such as `"Connecting to a relay"` or `"Loading network consensus"`. These labels come directly from Tor's bootstrap events.
+- A **Retry** button appears if startup fails.
+- A **Configure Bridges** button lets you switch transports without leaving the startup screen.
+
+Status labels are announced via VoiceOver accessibility notifications as the percentage updates.
+
+## Smart Connect
+
+Smart Connect is a fallback mechanism in the built-in Tor engine. If a direct Tor connection cannot be established, Smart Connect automatically tries alternative configurations to find a path through the Tor network.
+
+If Smart Connect exhausts all options and still cannot connect, it returns a `smartConnectFailed` error and the startup screen shows the **Retry** button.
+
+## TorManager states
+
+The built-in Tor engine (`TorManager`) has three states:
+
+| State | Meaning |
+|---|---|
+| `stopped` | Tor is not running. No Tor thread or controller is active. |
+| `starting` | The Tor thread has started, but the controller is not yet fully connected or no SOCKS address has been returned. |
+| `started` | The controller is connected and a SOCKS5 endpoint is available. Browsing is allowed. |
+
+Onion Browser only permits web requests when the state is `started`.
+
+## Limitations compared to Orbot
+
+| Feature | Built-in Tor | Orbot |
+|---|---|---|
+| Minimum iOS version | 17 | 15 |
+| Protects other apps | No | Yes (VPN tunnel) |
+| Conflicts with other VPNs | No | Yes |
+| Background stability | Shares app memory | Separate process |
+| Bridge configuration | In-app | Orbot settings |

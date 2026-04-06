@@ -1,0 +1,125 @@
+---
+title: "Localization"
+description: "How Onion Browser handles translations, which languages are supported, and how to contribute a new translation via Weblate."
+---
+
+## Supported languages
+
+Onion Browser is translated into the following languages by volunteer contributors:
+
+<AccordionGroup>
+  <Accordion title="A–F">
+    - **Albanian** — Besnik, Kristina\_Millona, alter2000, elioqoshi, vilisuli, marianaballa
+    - **Arabic** — AboShanab, mada19, BNasr, Hujairi, MissPeace, ahmedessamdev, Bild96, Israel.K
+    - **Bengali** — codesmite, Al\_Shahrior, BNasr, hasan\_md\_rakib, nr072
+    - **Catalan** — Ecron, pau.selles, Aetheria, Fitoschido, jmontane
+    - **Chinese (Simplified)** — Selinaf, feeblebiscuit, tsaizb, Lafrenze, ff98sha, 99yongliu, chrisx8\_, jxtsai
+    - **Chinese (Traditional)** — Selinaf, s8321414, jxtsai, MengPangWang, tsaizb, austinchang
+    - **Croatian** — milotype, paranatox
+    - **Czech** — Plarome, Lumeriol, hernikplays
+    - **Dutch** — SilverXp, biancahey, kwadronaut, pljmn, Meteor0id, ChillT, lucasz10
+    - **Finnish** — PyryL, RJuho, olavinto
+    - **French** — yahoe.001
+  </Accordion>
+  <Accordion title="G–L">
+    - **German** — Atalanttore, beonex1, nautilusx, ChristophSchulz, L10N, LordExtra, m\_rey
+    - **Greek** — dmaroulidis, KAUTH, pappasadrian, ssk1, apapac, arammos, beonex1, giormatsis
+    - **Hebrew** — IONIL
+    - **Hindi** — balapandu222, drashti4, umkdikshit, josprachi, libregeekingkid, philo\_math, sonusandeep, suremak
+    - **Hungarian** — benewfy, vargaviktor
+    - **Icelandic** — anarchodin, sveinki
+    - **Indonesian** — myusuffin, Kholidraf, Razmawardhana, andika, ic.debora77, icaldua, khrlzhfr, kiwed
+    - **Irish** — kscanne
+    - **Italian** — EllipticSet, Rhaal, RickDeckard, ryuw
+    - **Japanese** — Naofumi, Songbogong, TokumeiNanashi, pluto987, jpanonowl, TENCO, kiririn
+    - **Khmer** — Cantaloupe, PisethKONG, mosesngeth, rasy, sokty, sophatchy
+    - **Korean** — MinGyu19, jmj050716, sector429
+  </Accordion>
+  <Accordion title="M–Z">
+    - **Macedonian** — Liljana\_Ackovska, Zarko\_Gjurov, MatejMecka
+    - **Norwegian (Bokmål)** — kingu, eirik174
+    - **Pashto** — leoprohacker
+    - **Persian** — ariaa, arminoza, nariman, sabs, magnifico, Gilberto1, Zaefarani, alinbipr, hamidreza\_yazdani, mo.hoseini, noneck, voxp, gonjayesh, koofi, nonecknoel
+    - **Polish** — GEEZET1, Pihjun, tenderloin, weegoor, wiktoriatomzik
+    - **Portuguese (Brazil)** — flaviove, CypherZnnb, Bk\_\_13, CRCF, darkcrystal, eduaddadbr, leovasone, nopum, vmattos, Communia
+    - **Portuguese (Portugal)** — manuelarodsilva, Bk\_\_13, mrBatsu
+    - **Romanian** — alex1lazar, libertatemes, tud0r
+    - **Russian** — anm, dianazryn, emedvedev, Ifti, foxing29, neocaching, Pihjun, ZiPERR
+    - **Spanish** — arielbarbosa, Maria\_Jose, emmapeel, strel, zakooch, Aetheria, Fabiola.mauriceh, Fitoschido, kodachi, lenazun, nosense, supermigue2000, vareli, antonela\_
+    - **Tatar** — seber
+    - **Thai** — bact'
+    - **Turkish** — falcontr06, kayazeren, ali\_demirtas
+    - **Ukrainian** — Herenko, lyubomyr, MykolaBubelich, Kataphan, Pihjun, gr3ttle
+    - **Vietnamese** — AshCopper, PMinhDuc, Shinigami
+  </Accordion>
+</AccordionGroup>
+
+## Tooling
+
+### BartyCrouch
+
+Onion Browser uses [BartyCrouch](https://github.com/FlineDev/BartyCrouch) to keep `.strings` files in sync with the source code.
+
+Configuration is in `.bartycrouch.toml` at the project root. The key settings are:
+
+| Setting | Value | Description |
+|---|---|---|
+| `codePaths` | `.` | Scans the entire project directory for `NSLocalizedString` calls. |
+| `localizablePaths` | `Resources` | The directory where `.strings` files live. |
+| `defaultToKeys` | `true` | Uses the key as the default value when a translation is missing. |
+| `additive` | `false` | Removes translation keys that no longer exist in code. |
+| `sourceLocale` | `en` | English is the canonical source language. |
+| `harmonizeWithSource` | `true` | Keeps all locale files in sync with the English source. |
+| `sortByKeys` | `true` | Keys are sorted alphabetically for consistent diffs. |
+
+The `lint` section checks for duplicate keys and empty values across all locale files.
+
+### Weblate
+
+Community translations are managed on Weblate at [localizationlab.weblate.cloud](https://localizationlab.weblate.cloud), under the `onion-browser` project. The `.weblate` file at the project root points to this instance:
+
+```toml
+[weblate]
+url = https://localizationlab.weblate.cloud/api/
+translation = onion-browser
+```
+
+Weblate synchronises with the GitHub repository, so translations contributed on Weblate are periodically merged back into the `3.X` branch.
+
+## Contributing a translation
+
+### Improving an existing translation
+
+1. Go to [localizationlab.weblate.cloud](https://localizationlab.weblate.cloud) and find the `onion-browser` project.
+2. Select the language you want to improve.
+3. Register or log in to Weblate.
+4. Translate or review existing strings directly in the browser.
+
+Changes are batched and merged into the repository by the maintainers.
+
+### Adding a new language
+
+<Steps>
+  <Step title="Check if the language already exists">
+    Browse the `onion-browser` project on Weblate. If your language is listed but has low coverage, consider contributing to the existing translation instead.
+  </Step>
+  <Step title="Request a new language on Weblate">
+    If the language is not listed, open a new language request in the Weblate project settings or open an issue on the [GitHub repository](https://github.com/OnionBrowser/OnionBrowser/issues).
+  </Step>
+  <Step title="Create the .strings file (for pull requests)">
+    If you prefer to contribute directly via a pull request:
+
+    1. Copy `Resources/en.lproj/Localizable.strings` to a new locale directory, e.g. `Resources/fr.lproj/Localizable.strings`.
+    2. Translate all values. Leave keys unchanged.
+    3. Run BartyCrouch to validate and normalize the file:
+       ```bash
+       bartycrouch update
+       bartycrouch lint
+       ```
+    4. Open a pull request against the `3.X` branch.
+  </Step>
+</Steps>
+
+<Tip>
+  Translation contributions are credited by Weblate username in the README acknowledgements section.
+</Tip>

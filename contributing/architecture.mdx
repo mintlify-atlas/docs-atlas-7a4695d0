@@ -1,0 +1,125 @@
+---
+title: "Architecture overview"
+description: "How Onion Browser 3.X is structured: key components, Tor integration modes, WKWebView proxy routing, and the main dependency roles."
+---
+
+## High-level structure
+
+Onion Browser is an iOS app written in Swift. Its job is to provide a privacy-preserving browser UI while ensuring all network traffic routes through the Tor network. The app is a thin browser shell around `WKWebView` that delegates all Tor networking to either the companion [Orbot](https://orbot.app/) app or, on iOS 17+, a built-in Tor instance.
+
+```
+AppDelegate
+└── SceneDelegate (one per window — iPad supports multiple)
+    └── BrowsingViewController
+        └── Tab[] (each Tab wraps a WKWebView)
+```
+
+**`AppDelegate`** handles application-level lifecycle events: setting up audio session behaviour, purging downloads, stopping Tor on termination, and managing background task expiry. It holds references to all active `SceneDelegate` instances and their browsing UIs.
+
+**`SceneDelegate`** manages one window scene. It owns a `BrowsingViewController`, handles URL contexts passed from other apps (`onionbrowser://` scheme), responds to shortcut items ("New Tab", "Clear Data"), drives the biometric/Secure Enclave app lock, and delegates to `OrbotManager` to decide which startup screen to show.
+
+## Key components
+
+### BrowsingViewController
+
+The main browser chrome. Lives at `Browsing/BrowsingViewController.swift` with extensions for tab management, toolbar, text field delegation, and responder chain. It displays the address bar, navigation controls, tab strip/overview, and the active `Tab` view. It implements `TabDelegate` so individual `Tab` instances can request UI updates, open new tabs, or present view controllers.
+
+### Tab
+
+`Browsing/Tab.swift` — each open tab in the browser. A `Tab` is a `UIView` subclass that owns a `WKWebView` and a `WKWebViewConfiguration`. It handles:
+
+- Loading and reloading URLs.
+- Injecting JavaScript (content policy enforcement, GPC header).
+- Applying per-site settings (custom user agent, cookie policy, content policy).
+- Tracking TLS certificate state for the security indicator.
+- Downloading files via `QLPreviewController`.
+- Observing `estimatedProgress` for the progress bar.
+
+Tabs implement `WKNavigationDelegate`, `WKUIDelegate`, and `WKScriptMessageHandler` in separate extensions (`Tab+WKNavigationDelegate.swift`, etc.).
+
+### TorManager
+
+`TorManager.swift` — manages the in-process Tor instance using `Tor.framework`. Used only when the user has chosen built-in Tor (iOS 17+ feature) or when Orbot is not running.
+
+On `start()`, it:
+1. Starts the selected pluggable transport (via `IPtProxyUI`).
+2. Builds a `TorConfiguration` (SOCKS port auto-assigned, cookie authentication, GeoIP files, transport arguments).
+3. Launches a `TorThread` with that configuration.
+4. Connects a `TorController` to the control port and authenticates with the cookie.
+5. Waits for circuit establishment, then reads the SOCKS5 address from `net/listeners/socks`.
+
+The resulting `torSocks5` endpoint is an `NWEndpoint` that gets attached to `URLSessionConfiguration.proxyConfigurations` and to `WKWebView`'s proxy configuration so all traffic routes through Tor.
+
+### OrbotManager
+
+`OrbotManager.swift` — manages the relationship with the Orbot iOS app via `OrbotKit`. It:
+
+- Checks whether Orbot is installed and whether the app has an API token (permission).
+- Queries Orbot's current status (stopped / starting / started) and reacts to status changes.
+- Returns the appropriate startup view controller (`InstallViewController`, `PermissionViewController`, `StartOrbotViewController`, `OrbotOrBuiltInViewController`, etc.) based on the current state.
+- Stops all in-flight tab requests when Orbot stops, to prevent traffic leaking outside Tor.
+
+## Two Tor modes
+
+Onion Browser supports two ways of routing traffic through Tor:
+
+<Tabs>
+  <Tab title="Orbot (default)">
+    Onion Browser delegates all Tor network routing to the [Orbot](https://orbot.app/) iOS app, which runs a Tor Network Extension in the background. Orbot handles the Tor process, bridge configuration, and transport.
+
+    In this mode, Onion Browser:
+    - Uses `OrbotKit` to verify Orbot is running and has the correct permissions.
+    - Listens for status changes via `OrbotStatusChangeListener`.
+    - Does **not** start its own Tor process.
+    - All `WKWebView` traffic is automatically tunnelled through Orbot's system-wide VPN/proxy.
+
+    This is the default and supported path for all iOS versions from 15 onward.
+  </Tab>
+  <Tab title="Built-in Tor (iOS 17+)">
+    On iOS 17 and later, `WKWebView` gained native support for SOCKS5 proxy configuration via `WKWebViewConfiguration.websiteDataStore` and `URLSessionConfiguration.proxyConfigurations`. Onion Browser uses this to route `WKWebView` traffic through an in-process Tor instance.
+
+    In this mode, Onion Browser:
+    - Starts `TorManager`, which runs `Tor.framework` in-process on a background thread.
+    - After bootstrap, attaches the `NWEndpoint` SOCKS5 address to every new `WKWebViewConfiguration` and `URLSession`.
+    - Uses `IPtProxyUI` for pluggable transport setup (Snowflake, Lyrebird, DNSTT, etc.).
+
+    This mode is useful when Orbot is unreliable due to device memory constraints, or when the user wants to use Onion Browser over another VPN.
+  </Tab>
+</Tabs>
+
+## WKWebView
+
+Onion Browser 3.X replaced the old `UIWebView` with `WKWebView`. The reasons:
+
+- **Security**: `UIWebView` is deprecated and Apple no longer accepts apps that use it.
+- **Media**: `WKWebView` can stream audio and video through Tor (not possible with `UIWebView`).
+- **Standards**: `WKWebView` uses a modern WebKit rendering process with better web standards support.
+- **Downloads**: `WKWebView` supports downloading arbitrary content via `WKDownload`.
+- **Proxy support**: iOS 17 added `proxyConfigurations` to `WKWebViewConfiguration`, enabling SOCKS5 routing without a system VPN.
+
+Each `Tab` creates its `WKWebView` lazily on first use, using a shared `WKProcessPool` to allow cross-tab cookie sharing where appropriate.
+
+## Key directories
+
+| Directory | Contents |
+|---|---|
+| `OnionBrowser/Browsing/` | `BrowsingViewController` and all `Tab` source files, including circuit display, certificate viewer, download handling, history, and live search. |
+| `OnionBrowser/Settings/` | `SettingsViewController` (Eureka-based), `HostSettings` (per-site settings), `Settings` (global app settings), security level UI. |
+| `OnionBrowser/Startup/` | All view controllers shown before the browser UI: welcome, install Orbot, request permission, start Orbot, start built-in Tor, choose mode. |
+| `OnionBrowser/Bookmarks/` | Bookmark model, Nextcloud Bookmarks integration, start page generation, bookmark import/export. |
+| `OnionBrowser/Blocking/` | URL blocker logic and blocklist management (using HaGeZi's DNS blocklists). |
+| `OnionBrowser/AppIntents/` | Siri Shortcuts / App Intents support: open URL, create tab, close tabs, search, bookmark, find on page, clear history, switch tabs. |
+| `OnionBrowser/Helpers/` | Shared utilities, extensions, logging, download helper, website storage cleanup. |
+
+## Main dependencies
+
+| Dependency | Role |
+|---|---|
+| `Tor.framework` | Embeds a native Tor binary for iOS. Provides `TorThread`, `TorController`, `TorConfiguration`, `TorCircuit`, and GeoIP bundles. Used by `TorManager` in built-in Tor mode. |
+| `IPtProxyUI` | UI and logic for selecting and configuring pluggable transports (Snowflake, Lyrebird/obfs4, meek, WebTunnel, DNSTT). Also provides `IpSupport` for IPv4/IPv6 detection and `Transport.asConf`/`Transport.asArguments` helpers. |
+| `OrbotKit` | Swift SDK for IPC with the Orbot iOS app. Provides status polling, status change notifications, API token management, circuit listing, and circuit closing. |
+| `Eureka` | Declarative form framework. All settings screens are built with Eureka rows and sections rather than manual `UITableView` code. |
+| `SwiftSoup` | HTML parsing. Used to import and export bookmarks as Firefox-compatible HTML files (Netscape Bookmark File Format). |
+| `SDCAlertView` | Custom alert presentation. Used where `UIAlertController` does not provide enough layout flexibility. |
+| `DTFoundation/DTASN1` | ASN.1 parsing for X.509 TLS certificates. Powers the certificate details view accessible from the address bar lock icon. |
+| `FavIcon` | Async favicon fetching and caching for the bookmarks UI. |

@@ -1,0 +1,64 @@
+---
+title: "Installation"
+description: "Download Onion Browser from the App Store and install Orbot to connect to Tor."
+---
+
+## Requirements
+
+Onion Browser requires **iOS 15 or later**. It runs on iPhone and iPad. There is no macOS version.
+
+## Install Onion Browser
+
+<Steps>
+  <Step title="Open the App Store on your device">
+    Onion Browser is free to download. Search for "Onion Browser" in the App Store, or use the direct link below.
+  </Step>
+  <Step title="Download Onion Browser">
+    Tap **Get** on the [Onion Browser App Store page](https://apps.apple.com/app/onion-browser/id519296448) and authenticate with Face ID, Touch ID, or your Apple ID password.
+  </Step>
+  <Step title="Install Orbot (recommended)">
+    Orbot is a companion app that provides the Tor VPN tunnel Onion Browser uses by default. Download it from the [Orbot App Store page](https://apps.apple.com/app/orbot/id1609461599).
+
+    <Note>
+      Orbot is maintained by the Guardian Project and receives independent updates. Using Orbot is strongly recommended over the built-in Tor option, which has known security limitations.
+    </Note>
+  </Step>
+  <Step title="Open Onion Browser">
+    Tap the Onion Browser icon to launch the app. The first-launch setup will detect whether Orbot is installed and guide you through connecting to Tor.
+  </Step>
+</Steps>
+
+## Set Onion Browser as your default browser
+
+You can make Onion Browser the default browser on your device so that links opened from other apps route through Tor automatically.
+
+<Steps>
+  <Step title="Open the iOS Settings app">
+    Go to **Settings** on your iPhone or iPad.
+  </Step>
+  <Step title="Find Onion Browser in the app list">
+    Scroll down to the list of installed apps and tap **Onion Browser**.
+  </Step>
+  <Step title="Tap Default Browser App">
+    Tap **Default Browser App** and select **Onion Browser**.
+  </Step>
+</Steps>
+
+<Note>
+  Setting Onion Browser as your default browser means links from Mail, Messages, and other apps will open in Onion Browser instead of Safari. You can change this back at any time from the same Settings screen.
+</Note>
+
+## About the built-in Tor option
+
+If you choose not to install Orbot, Onion Browser can fall back to a bundled Tor binary. The app will present a warning when you select this mode because the built-in Tor has security limitations. It does not receive independent updates and may lag behind the current Tor release. For most users, installing Orbot is the better choice.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="First launch" icon="play" href="/first-launch">
+    Walk through the startup flow and connect to Tor for the first time.
+  </Card>
+  <Card title="Orbot setup" icon="shield-halved" href="/tor/orbot-setup">
+    Learn how to configure Orbot and grant Onion Browser access to the Tor connection.
+  </Card>
+</CardGroup>

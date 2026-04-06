@@ -1,0 +1,92 @@
+---
+title: "How Tor protects your privacy"
+description: "Onion routing, circuits, .onion sites, and what Tor does and does not hide about your browsing."
+---
+
+## What Tor is
+
+Tor is a free, open network that protects your privacy by routing your internet traffic through a series of volunteer-operated relays before it reaches its destination. No single relay knows both who you are and what you're accessing.
+
+This technique is called **onion routing**: your traffic is wrapped in multiple layers of encryption, one for each relay. Each relay peels off one layer and forwards the traffic to the next, so no relay sees the full picture.
+
+## The three-hop circuit
+
+Every connection you make through Tor travels through exactly three relays:
+
+<Steps>
+  <Step title="Entry node (Guard)">
+    The first relay knows your real IP address but cannot see which website you are visiting. Tor reuses the same guard node for a period of time to reduce the risk of traffic analysis attacks.
+  </Step>
+  <Step title="Middle node">
+    The second relay knows only the entry and exit nodes. It cannot see your IP address or your destination.
+  </Step>
+  <Step title="Exit node">
+    The third relay connects to the destination website on your behalf. It can see the destination and unencrypted content of the request, but does not know your real IP address.
+  </Step>
+</Steps>
+
+The circuit viewer in Onion Browser shows you which three countries your traffic passes through for the current site. Tap the shield icon in the toolbar, then tap **Tor Circuit** to see it.
+
+## How Onion Browser uses Tor
+
+All traffic originating from Onion Browser — web pages, images, audio, video streams — goes through Tor before leaving your device. This applies whether you use Orbot or the built-in Tor engine.
+
+<Note>
+  Media streaming support over Tor was introduced in Onion Browser 3.0, when the app switched from the older `UIWebView` to `WKWebView`. Earlier versions could not route media streams through Tor.
+</Note>
+
+## What Tor hides
+
+- **Your IP address.** Websites and their servers see the IP address of the exit node, not yours.
+- **Your location.** Because your IP address is hidden, your geographic location is not exposed to sites you visit.
+- **Your browsing activity from your network.** Your internet provider, employer, or anyone monitoring your local network can see that you are using Tor, but not which sites you visit or what you do there.
+
+## What Tor does not hide
+
+- **What you type into sites.** If you log into a website, that site knows who you are regardless of Tor.
+- **Malicious exit nodes.** Exit nodes can observe unencrypted traffic. Always look for HTTPS in the address bar — Onion Browser enforces HTTPS on clearnet addresses automatically.
+- **Tor usage itself.** Your network provider can see that you are connecting to Tor. Bridges can help conceal this — see [Bridges and circumvention](/tor/bridges-and-circumvention).
+
+## .onion sites (v3 onion services)
+
+Sites with `.onion` addresses are hosted directly on the Tor network. They are only accessible through Tor, and offer stronger privacy than clearnet sites:
+
+- The server's real IP address and location are hidden from you.
+- Your IP address is hidden from the server.
+- The connection is end-to-end encrypted entirely within the Tor network, so there is no exit node that can observe traffic.
+
+Onion Browser supports **v3 onion services** — 56-character `.onion` addresses that replaced the older v2 format. V2 addresses are no longer supported by the Tor network.
+
+<Tip>
+  Many major news organizations and privacy tools publish `.onion` addresses. Onion Browser ships with several `.onion` bookmarks pre-installed.
+</Tip>
+
+## Onion-Location: automatic redirects to .onion sites
+
+Some clearnet websites advertise a `.onion` address using the `Onion-Location` HTTP response header. When Onion Browser detects this header, it can automatically redirect you to the `.onion` version of the site, giving you a stronger, end-to-end Tor connection.
+
+You can control whether these redirects happen automatically in **Settings**. This feature was introduced in Onion Browser 2.7.0.
+
+## Tor circuits
+
+A Tor circuit is the specific path — entry node, middle node, exit node — that a particular connection uses. Different tabs or connections may use different circuits.
+
+**To view your current circuit:**
+
+1. Load a page in Onion Browser.
+2. Tap the shield icon in the toolbar.
+3. The circuit panel shows your browser, the three relay nodes (with country names and IP addresses), and the destination site. The first relay is labeled **Guard**.
+
+**To get a new circuit for a site:**
+
+Tap **New Circuit for this Site** in the circuit panel. Onion Browser closes the current circuits used by that site and reloads the page through a fresh set of relays. Use this if a site is slow or you want a different exit node.
+
+<Note>
+  Creating a new circuit does not change your guard node. The guard is kept stable intentionally.
+</Note>
+
+## Global Privacy Control (GPC)
+
+Onion Browser sends the `Sec-GPC: 1` header with every request when the **Global Privacy Control** setting is enabled. GPC is the successor to the older Do-Not-Track header, which was replaced in Onion Browser 3.0.
+
+GPC signals to websites that you do not consent to the sale or sharing of your personal data. It is a legal signal in jurisdictions that recognize it (such as California under the CCPA), but compliance depends on the website. Enable it in **Settings → Privacy**.

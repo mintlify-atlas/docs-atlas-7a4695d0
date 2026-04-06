@@ -1,0 +1,84 @@
+---
+title: "Content policy"
+description: "Understand the per-site content controls available in Onion Browser, including JavaScript, cookies, user agent, canvas fingerprinting, and more."
+---
+
+Content policy controls how web content is handled for a given site. Every option described here appears inside **Default Security** (Settings > Default Security) and can also be overridden individually for specific sites via [per-site settings](/settings/per-site-settings).
+
+The top of the security screen shows three shield presets — **Gold**, **Silver**, and **Bronze** — that configure groups of options at once. See [security levels](/browsing/security-levels) for what each preset enables. Any manual change to the individual toggles below the shields creates a **Custom** configuration.
+
+## JavaScript
+
+The **Allow JavaScript** switch controls whether the browser executes JavaScript on pages.
+
+| State | Behavior |
+|---|---|
+| On | JavaScript runs normally. Most modern sites require this. |
+| Off | JavaScript is completely disabled. Pages that depend on it will break or show no content. |
+
+JavaScript is enabled in **Bronze** (Insecure) and **Silver** (Medium) presets and disabled in **Gold** (Secure). Disabling JavaScript provides the strongest protection against browser-based tracking and exploitation.
+
+<Note>
+  Disabling JavaScript also removes some browser UI interactions such as context menus on certain elements.
+</Note>
+
+## Lockdown Mode
+
+The **Lockdown Mode** toggle maps directly to iOS's system-level Lockdown Mode for the web view. When on, the `WKWebView` instance applies extra restrictions that reduce the attack surface of the browser engine.
+
+This toggle is only visible on iOS 16 and later. See [security settings](/settings/security-settings#lockdown-mode-ios-16) for details.
+
+## Cookies
+
+The **Allow Persistent Cookies** switch is in the **Privacy** section of the security settings.
+
+| State | Behavior |
+|---|---|
+| On (whitelisted) | The site can store cookies and local storage databases persistently across sessions. |
+| Off (blocked) | Cookies set by this site are not persisted. Session cookies still work while the tab is open. |
+
+Persistent cookies are off by default. You can allow them for specific trusted sites using per-site settings without changing the global default.
+
+## User agent
+
+The **User Agent** field lets you send a custom `User-Agent` string to the server. Leaving it blank sends the default `WKWebView` user agent string.
+
+Onion Browser ships with a list of popular user agent strings — desktop browsers, mobile browsers, and others — available as one-tap options below the text field. Selecting one fills in the field. These presets are useful for accessing sites that serve different content based on the browser identity, or for bypassing Captchas that appear more frequently for the default iOS user agent.
+
+<Warning>
+  Changing your user agent affects your fingerprint. Using a user agent that doesn't match your platform (e.g., a desktop Chrome string on an iPhone) can make you more distinctive, not less.
+</Warning>
+
+## Canvas fingerprinting and media capture
+
+The **Allow Access to Microphone and Video** switch controls whether sites can request access to the device camera and microphone. When off, media capture APIs are blocked.
+
+Canvas fingerprinting is addressed indirectly through Lockdown Mode. When Lockdown Mode is enabled, iOS applies additional restrictions to JavaScript APIs that are commonly used for canvas-based fingerprinting.
+
+## Universal link protection
+
+The **Universal Link Protection** switch, found in the security settings, intercepts link taps that would normally hand off to an installed native app. With this option enabled, tapping a link that a third-party app has registered to handle (such as a Twitter link opening in the Twitter app) keeps the navigation inside Onion Browser instead.
+
+This prevents apps from learning that you visited a link, and prevents involuntary data sharing with other apps.
+
+<Note>
+  Universal Link Protection is on by default.
+</Note>
+
+## Orientation and motion sensor access
+
+The **Allow Access to Orientation and Motion Data** switch controls whether sites can read device orientation and motion sensor data via the `DeviceOrientationEvent` and `DeviceMotionEvent` JavaScript APIs.
+
+This data can be used to fingerprint users or infer physical context. The option is off by default in **Gold** and **Silver** presets and on in **Bronze**.
+
+## Onion-Location header
+
+The **Follow Onion-Location Header Automatically** switch enables automatic redirection to `.onion` addresses when a site advertises one via the `Onion-Location` HTTP response header. When off, the redirect does not happen automatically, but you may still navigate to the `.onion` address manually.
+
+This option is off by default.
+
+## Global Privacy Control (GPC)
+
+The **Tell websites that you object to processing and selling of your personal data** toggle in **Settings > Privacy & Security** sends the [`Sec-GPC: 1`](https://globalprivacycontrol.github.io/gpc-spec/) request header with every HTTP request. GPC is the successor to the deprecated Do-Not-Track header, with legal weight in jurisdictions that have adopted privacy laws honoring it (such as the California Consumer Privacy Act).
+
+This is a global setting — it applies to all sites, not just specific ones. It is off by default.
